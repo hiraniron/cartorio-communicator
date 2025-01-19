@@ -1,22 +1,86 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { UserPlus, Mail } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const EmailManagement = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Tentando cadastrar novo usuário:", { email, name });
+  useEffect(() => {
+    checkAdminAccess();
+  }, []);
+
+  const checkAdminAccess = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
     
-    // Aqui será implementada a lógica de cadastro com Supabase
-    toast.success("Usuário cadastrado com sucesso!");
-    setEmail("");
-    setName("");
+    if (!user) {
+      toast.error("Você precisa estar logado para acessar esta página");
+      navigate("/login");
+      return;
+    }
+
+    const { data: userData, error } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (error || userData?.role !== 'admin_master') {
+      toast.error("Acesso não autorizado");
+      navigate("/dashboard");
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // Criar usuário no Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password: Math.random().toString(36).slice(-8), // Senha temporária aleatória
+      });
+
+      if (authError) throw authError;
+
+      // Adicionar informações adicionais na tabela de usuários
+      if (authData.user) {
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert([
+            {
+              id: authData.user.id,
+              name,
+              email,
+              role: 'user'
+            }
+          ]);
+
+        if (profileError) throw profileError;
+      }
+
+      toast.success("Usuário cadastrado com sucesso!");
+      setEmail("");
+      setName("");
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
+      toast.error("Erro ao cadastrar usuário");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -40,6 +104,7 @@ const EmailManagement = () => {
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -55,12 +120,13 @@ const EmailManagement = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full hover-scale">
-              Cadastrar Usuário
+            <Button type="submit" className="w-full hover-scale" disabled={isLoading}>
+              {isLoading ? "Cadastrando..." : "Cadastrar Usuário"}
             </Button>
           </form>
         </Card>
