@@ -21,22 +21,31 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      console.log("Tentando fazer login com:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Erro de autenticação:", error);
+        throw error;
+      }
 
       if (data.user) {
+        console.log("Usuário autenticado:", data.user);
         const { data: userData, error: roleError } = await supabase
           .from('users')
           .select('role')
           .eq('id', data.user.id)
           .single();
 
-        if (roleError) throw roleError;
+        if (roleError) {
+          console.error("Erro ao buscar role:", roleError);
+          throw roleError;
+        }
 
+        console.log("Role do usuário:", userData?.role);
         toast.success("Login realizado com sucesso!");
         
         if (userData?.role === 'admin_master') {
@@ -45,9 +54,9 @@ const Login = () => {
           navigate("/dashboard");
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro no login:", error);
-      toast.error("Credenciais inválidas");
+      toast.error(error.message || "Credenciais inválidas");
     } finally {
       setIsLoading(false);
     }
