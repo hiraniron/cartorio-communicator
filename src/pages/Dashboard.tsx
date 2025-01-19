@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Upload, AlertCircle } from "lucide-react";
+import { Calendar, Clock, Paperclip, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 const communications = [
@@ -134,7 +134,7 @@ const Dashboard = () => {
                     onClick={() => handleSubmit(comm.id)}
                     className="hover-scale"
                   >
-                    <Upload className="w-4 h-4 mr-2" />
+                    <Paperclip className="w-4 h-4 mr-2" />
                     Anexar
                   </Button>
                 </div>
