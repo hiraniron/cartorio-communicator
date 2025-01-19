@@ -7,9 +7,10 @@ import { UserPlus, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 
+// Create Supabase client
 const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
+  "https://your-supabase-project-url.supabase.co",  // This will be replaced with your actual URL
+  "your-anon-key"  // This will be replaced with your actual key
 );
 
 const EmailManagement = () => {
@@ -23,23 +24,29 @@ const EmailManagement = () => {
   }, []);
 
   const checkAdminAccess = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      toast.error("Você precisa estar logado para acessar esta página");
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("Você precisa estar logado para acessar esta página");
+        navigate("/login");
+        return;
+      }
+
+      const { data: userData, error } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (error || userData?.role !== 'admin_master') {
+        toast.error("Acesso não autorizado");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Erro ao verificar acesso:", error);
+      toast.error("Erro ao verificar permissões");
       navigate("/login");
-      return;
-    }
-
-    const { data: userData, error } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (error || userData?.role !== 'admin_master') {
-      toast.error("Acesso não autorizado");
-      navigate("/dashboard");
     }
   };
 
