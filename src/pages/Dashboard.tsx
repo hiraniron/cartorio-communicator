@@ -23,28 +23,28 @@ const communications = [
 ];
 
 const Dashboard = () => {
-  console.log("Dashboard component rendered"); // Log inicial do componente
+  console.log("Dashboard component rendered");
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Tentando fazer upload de arquivo"); // Log do início do upload
+    console.log("Tentando fazer upload de arquivo");
     const file = event.target.files?.[0];
     if (file) {
-      console.log("Arquivo selecionado:", file.name); // Log do arquivo selecionado
+      console.log("Arquivo selecionado:", file.name);
       setSelectedFile(file);
       toast.success("Arquivo selecionado com sucesso!");
     }
   };
 
   const handleSubmit = (id: number) => {
-    console.log("Tentando enviar arquivo para comunicação ID:", id); // Log da tentativa de envio
+    console.log("Tentando enviar arquivo para comunicação ID:", id);
     if (selectedFile) {
-      console.log("Enviando arquivo:", selectedFile.name); // Log do arquivo sendo enviado
+      console.log("Enviando arquivo:", selectedFile.name);
       toast.success("Comprovante enviado com sucesso!");
       setSelectedFile(null);
     } else {
-      console.log("Nenhum arquivo selecionado"); // Log de erro
+      console.log("Nenhum arquivo selecionado");
       toast.error("Por favor, selecione um arquivo");
     }
   };
@@ -53,7 +53,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
         <header className="space-y-2">
-          <h1 className="text-4xl font-display font-bold">Dashboard</h1>
+          <h1 className="text-4xl font-display font-bold">COMUNICAÇÕES OBRIGATÓRIAS</h1>
           <p className="text-gray-500">Gerencie suas comunicações legais</p>
         </header>
 
