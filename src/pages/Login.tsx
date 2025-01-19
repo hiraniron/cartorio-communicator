@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  "https://your-supabase-project-url.supabase.co",
-  "your-anon-key"
+  "https://xtqzpqfkbxjqvxqjwxmz.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cXpwcWZrYnhqcXZ4cWp3eG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc0MjU1NzAsImV4cCI6MjAyMzAwMTU3MH0.Pu_IqTlDYBsqnXJvfGVfD0Hy9sQk_P0-oZFGDB3n6Qw"
 );
 
 const Login = () => {
