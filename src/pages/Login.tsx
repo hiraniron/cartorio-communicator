@@ -31,7 +31,7 @@ const Login = () => {
       console.log("Iniciando processo de login para:", email);
       
       // Primeiro, tentamos fazer login diretamente
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      let { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
