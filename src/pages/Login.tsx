@@ -3,19 +3,53 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://your-supabase-project-url.supabase.co",
+  "your-anon-key"
+);
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "admin@example.com" && password === "password") {
-      toast.success("Login realizado com sucesso!");
-      navigate("/dashboard");
-    } else {
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        const { data: userData, error: roleError } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', data.user.id)
+          .single();
+
+        if (roleError) throw roleError;
+
+        toast.success("Login realizado com sucesso!");
+        
+        if (userData?.role === 'admin_master') {
+          navigate("/email-management");
+        } else {
+          navigate("/dashboard");
+        }
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
       toast.error("Credenciais inválidas");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -38,6 +72,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -50,11 +85,12 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full"
                 required
+                disabled={isLoading}
               />
             </div>
 
-            <Button type="submit" className="w-full hover-scale">
-              Entrar
+            <Button type="submit" className="w-full hover-scale" disabled={isLoading}>
+              {isLoading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
         </div>
