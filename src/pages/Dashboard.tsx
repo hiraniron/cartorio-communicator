@@ -135,7 +135,7 @@ const Dashboard = () => {
                     className="hover-scale"
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Enviar
+                    Anexar
                   </Button>
                 </div>
               </Card>
