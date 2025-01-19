@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { createClient } from "@supabase/supabase-js";
 
+// Atualizando as credenciais do Supabase
 const supabase = createClient(
   "https://xtqzpqfkbxjqvxqjwxmz.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cXpwcWZrYnhqcXZ4cWp3eG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc0MjU1NzAsImV4cCI6MjAyMzAwMTU3MH0.Pu_IqTlDYBsqnXJvfGVfD0Hy9sQk_P0-oZFGDB3n6Qw"
@@ -22,6 +23,19 @@ const Login = () => {
 
     try {
       console.log("Tentando fazer login com:", email);
+      
+      // Primeiro, vamos criar o usuário se ele não existir
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (signUpError && !signUpError.message.includes('User already registered')) {
+        console.error("Erro ao criar usuário:", signUpError);
+        throw signUpError;
+      }
+
+      // Agora tentamos fazer login
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -34,6 +48,23 @@ const Login = () => {
 
       if (data.user) {
         console.log("Usuário autenticado:", data.user);
+        
+        // Inserir o usuário na tabela users se ainda não existir
+        const { error: insertError } = await supabase
+          .from('users')
+          .upsert({ 
+            id: data.user.id,
+            email: data.user.email,
+            role: 'admin_master'
+          }, { 
+            onConflict: 'id'
+          });
+
+        if (insertError) {
+          console.error("Erro ao inserir usuário:", insertError);
+          throw insertError;
+        }
+
         const { data: userData, error: roleError } = await supabase
           .from('users')
           .select('role')
