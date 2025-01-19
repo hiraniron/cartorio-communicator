@@ -23,21 +23,28 @@ const communications = [
 ];
 
 const Dashboard = () => {
+  console.log("Dashboard component rendered"); // Log inicial do componente
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Tentando fazer upload de arquivo"); // Log do início do upload
     const file = event.target.files?.[0];
     if (file) {
+      console.log("Arquivo selecionado:", file.name); // Log do arquivo selecionado
       setSelectedFile(file);
       toast.success("Arquivo selecionado com sucesso!");
     }
   };
 
   const handleSubmit = (id: number) => {
+    console.log("Tentando enviar arquivo para comunicação ID:", id); // Log da tentativa de envio
     if (selectedFile) {
+      console.log("Enviando arquivo:", selectedFile.name); // Log do arquivo sendo enviado
       toast.success("Comprovante enviado com sucesso!");
       setSelectedFile(null);
     } else {
+      console.log("Nenhum arquivo selecionado"); // Log de erro
       toast.error("Por favor, selecione um arquivo");
     }
   };
