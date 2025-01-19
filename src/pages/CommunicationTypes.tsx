@@ -25,6 +25,7 @@ interface CommunicationType {
 const CommunicationTypes = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [customName, setCustomName] = useState("");
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
   const [frequency, setFrequency] = useState("");
@@ -32,7 +33,9 @@ const CommunicationTypes = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !description || !deadline || !frequency) {
+    const finalName = name === "outros" ? customName : name;
+    
+    if (!finalName || !description || !deadline || !frequency) {
       toast.error("Por favor, preencha todos os campos");
       return;
     }
@@ -42,6 +45,7 @@ const CommunicationTypes = () => {
     
     // Limpa o formulário
     setName("");
+    setCustomName("");
     setDescription("");
     setDeadline("");
     setFrequency("");
@@ -85,9 +89,22 @@ const CommunicationTypes = () => {
                 <SelectItem value="detran-municipio">DETRAN/MUNICÍPIO</SelectItem>
                 <SelectItem value="dgi">DGI</SelectItem>
                 <SelectItem value="censec">CENSEC</SelectItem>
+                <SelectItem value="outros">Outros</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {name === "outros" && (
+            <div className="space-y-2">
+              <Label htmlFor="customName">Especifique o nome da comunicação</Label>
+              <Input
+                id="customName"
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                placeholder="Digite o nome da comunicação"
+              />
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="description">Descrição</Label>
