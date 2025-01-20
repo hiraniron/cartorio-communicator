@@ -133,56 +133,41 @@ export const CommunicationTypeForm = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Dia</Label>
           <div className="space-y-2">
-            <Label>Dia</Label>
-            <div className="space-y-2">
-              {deadlines.map((deadline, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    type="number"
-                    min="1"
-                    max="31"
-                    value={deadline}
-                    onChange={(e) => updateDeadline(index, e.target.value)}
-                    placeholder="Ex: 5"
-                  />
-                  {deadlines.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeDeadline(index)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={addDeadline}
-                className="w-full"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar dia
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="year">Ano</Label>
-            <Input
-              id="year"
-              type="number"
-              min="2024"
-              max="2100"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              placeholder="Ex: 2024"
-            />
+            {deadlines.map((deadline, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  type="number"
+                  min="1"
+                  max="31"
+                  value={deadline}
+                  onChange={(e) => updateDeadline(index, e.target.value)}
+                  placeholder="Ex: 5"
+                />
+                {deadlines.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeDeadline(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addDeadline}
+              className="w-full"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar dia
+            </Button>
           </div>
         </div>
 
@@ -190,6 +175,19 @@ export const CommunicationTypeForm = () => {
           selectedMonths={selectedMonths} 
           setSelectedMonths={setSelectedMonths} 
         />
+
+        <div className="space-y-2">
+          <Label htmlFor="year">Ano</Label>
+          <Input
+            id="year"
+            type="number"
+            min="2024"
+            max="2100"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            placeholder="Ex: 2024"
+          />
+        </div>
 
         <Button type="submit" className="w-full">
           Cadastrar
