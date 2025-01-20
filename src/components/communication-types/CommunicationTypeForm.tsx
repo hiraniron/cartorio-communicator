@@ -21,13 +21,14 @@ export const CommunicationTypeForm = () => {
   const [description, setDescription] = useState("");
   const [deadlines, setDeadlines] = useState<string[]>([""]);
   const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
+  const [year, setYear] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const finalName = name === "outros" ? customName : name;
     
-    if (!finalName || !description || deadlines.some(d => !d) || selectedMonths.length === 0) {
+    if (!finalName || !description || deadlines.some(d => !d) || selectedMonths.length === 0 || !year) {
       toast.error("Por favor, preencha todos os campos");
       return;
     }
@@ -42,6 +43,12 @@ export const CommunicationTypeForm = () => {
       return;
     }
 
+    const yearNumber = parseInt(year);
+    if (yearNumber < 2024 || yearNumber > 2100) {
+      toast.error("Por favor, insira um ano válido (entre 2024 e 2100)");
+      return;
+    }
+
     toast.success("Tipo de comunicação cadastrado com sucesso!");
     
     setName("");
@@ -49,6 +56,7 @@ export const CommunicationTypeForm = () => {
     setDescription("");
     setDeadlines([""]);
     setSelectedMonths([]);
+    setYear("");
   };
 
   const addDeadline = () => {
@@ -164,11 +172,24 @@ export const CommunicationTypeForm = () => {
             </div>
           </div>
 
-          <MonthSelector 
-            selectedMonths={selectedMonths} 
-            setSelectedMonths={setSelectedMonths} 
-          />
+          <div className="space-y-2">
+            <Label htmlFor="year">Ano</Label>
+            <Input
+              id="year"
+              type="number"
+              min="2024"
+              max="2100"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              placeholder="Ex: 2024"
+            />
+          </div>
         </div>
+
+        <MonthSelector 
+          selectedMonths={selectedMonths} 
+          setSelectedMonths={setSelectedMonths} 
+        />
 
         <Button type="submit" className="w-full">
           Cadastrar
