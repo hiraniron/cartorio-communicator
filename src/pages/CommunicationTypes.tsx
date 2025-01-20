@@ -61,24 +61,6 @@ const CommunicationTypes = () => {
     setSelectedMonths([]);
   };
 
-  const handleSelectMonth = (date: Date) => {
-    setSelectedMonths((current) => {
-      const isSelected = current.some(
-        (selectedDate) =>
-          format(selectedDate, "MM-yyyy") === format(date, "MM-yyyy")
-      );
-
-      if (isSelected) {
-        return current.filter(
-          (selectedDate) =>
-            format(selectedDate, "MM-yyyy") !== format(date, "MM-yyyy")
-        );
-      } else {
-        return [...current, date];
-      }
-    });
-  };
-
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
@@ -171,7 +153,7 @@ const CommunicationTypes = () => {
                   }}
                   locale={ptBR}
                   disabled={(date) => {
-                    // Desabilita dias que não são o primeiro dia do mês
+                    // Desabilita todos os dias exceto o primeiro dia do mês
                     return date.getDate() !== 1;
                   }}
                   modifiersStyles={{
@@ -180,6 +162,10 @@ const CommunicationTypes = () => {
                       color: "white",
                     },
                   }}
+                  ISOWeek={true}
+                  showOutsideDays={false}
+                  fixedWeeks={false}
+                  showWeekNumber={false}
                 />
               </div>
               <div className="mt-2 text-sm text-muted-foreground">
