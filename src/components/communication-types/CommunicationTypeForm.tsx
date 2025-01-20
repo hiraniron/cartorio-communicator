@@ -105,7 +105,7 @@ export const CommunicationTypeForm = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="deadline">Até o dia</Label>
+            <Label htmlFor="deadline">Dia</Label>
             <Input
               id="deadline"
               type="number"
