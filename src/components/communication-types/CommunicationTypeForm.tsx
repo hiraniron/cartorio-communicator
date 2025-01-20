@@ -13,12 +13,13 @@ import {
 import { MonthSelector } from "./MonthSelector";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Plus, X } from "lucide-react";
 
 export const CommunicationTypeForm = () => {
   const [name, setName] = useState("");
   const [customName, setCustomName] = useState("");
   const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState("");
+  const [deadlines, setDeadlines] = useState<string[]>([""]);
   const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,14 +27,18 @@ export const CommunicationTypeForm = () => {
     
     const finalName = name === "outros" ? customName : name;
     
-    if (!finalName || !description || !deadline || selectedMonths.length === 0) {
+    if (!finalName || !description || deadlines.some(d => !d) || selectedMonths.length === 0) {
       toast.error("Por favor, preencha todos os campos");
       return;
     }
 
-    const deadlineNumber = parseInt(deadline);
-    if (deadlineNumber < 1 || deadlineNumber > 31) {
-      toast.error("Por favor, insira um dia válido (entre 1 e 31)");
+    const invalidDeadlines = deadlines.some(deadline => {
+      const deadlineNumber = parseInt(deadline);
+      return deadlineNumber < 1 || deadlineNumber > 31;
+    });
+
+    if (invalidDeadlines) {
+      toast.error("Por favor, insira dias válidos (entre 1 e 31)");
       return;
     }
 
@@ -42,8 +47,25 @@ export const CommunicationTypeForm = () => {
     setName("");
     setCustomName("");
     setDescription("");
-    setDeadline("");
+    setDeadlines([""]);
     setSelectedMonths([]);
+  };
+
+  const addDeadline = () => {
+    setDeadlines([...deadlines, ""]);
+  };
+
+  const removeDeadline = (index: number) => {
+    if (deadlines.length > 1) {
+      const newDeadlines = deadlines.filter((_, i) => i !== index);
+      setDeadlines(newDeadlines);
+    }
+  };
+
+  const updateDeadline = (index: number, value: string) => {
+    const newDeadlines = [...deadlines];
+    newDeadlines[index] = value;
+    setDeadlines(newDeadlines);
   };
 
   return (
@@ -105,16 +127,41 @@ export const CommunicationTypeForm = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="deadline">Dia</Label>
-            <Input
-              id="deadline"
-              type="number"
-              min="1"
-              max="31"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              placeholder="Ex: 5"
-            />
+            <Label>Dia</Label>
+            <div className="space-y-2">
+              {deadlines.map((deadline, index) => (
+                <div key={index} className="flex gap-2">
+                  <Input
+                    type="number"
+                    min="1"
+                    max="31"
+                    value={deadline}
+                    onChange={(e) => updateDeadline(index, e.target.value)}
+                    placeholder="Ex: 5"
+                  />
+                  {deadlines.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeDeadline(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addDeadline}
+                className="w-full"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Adicionar dia
+              </Button>
+            </div>
           </div>
 
           <MonthSelector 
