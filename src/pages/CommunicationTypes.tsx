@@ -40,6 +40,13 @@ const CommunicationTypes = () => {
       return;
     }
 
+    // Validar se o dia está entre 1 e 31
+    const deadlineNumber = parseInt(deadline);
+    if (deadlineNumber < 1 || deadlineNumber > 31) {
+      toast.error("Por favor, insira um dia válido (entre 1 e 31)");
+      return;
+    }
+
     // Aqui será implementada a lógica para salvar no banco de dados
     toast.success("Tipo de comunicação cadastrado com sucesso!");
     
@@ -118,10 +125,12 @@ const CommunicationTypes = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="deadline">Prazo (em dias)</Label>
+              <Label htmlFor="deadline">Até o dia</Label>
               <Input
                 id="deadline"
                 type="number"
+                min="1"
+                max="31"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
                 placeholder="Ex: 5"
