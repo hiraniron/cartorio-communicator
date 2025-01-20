@@ -10,16 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface CommunicationType {
   id: string;
   name: string;
   description: string;
   deadline: number;
-  frequency: string;
+  selectedMonths: Date[];
 }
 
 const CommunicationTypes = () => {
@@ -28,14 +31,14 @@ const CommunicationTypes = () => {
   const [customName, setCustomName] = useState("");
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [frequency, setFrequency] = useState("");
+  const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const finalName = name === "outros" ? customName : name;
     
-    if (!finalName || !description || !deadline || !frequency) {
+    if (!finalName || !description || !deadline || selectedMonths.length === 0) {
       toast.error("Por favor, preencha todos os campos");
       return;
     }
@@ -55,7 +58,25 @@ const CommunicationTypes = () => {
     setCustomName("");
     setDescription("");
     setDeadline("");
-    setFrequency("");
+    setSelectedMonths([]);
+  };
+
+  const handleSelectMonth = (date: Date) => {
+    setSelectedMonths((current) => {
+      const isSelected = current.some(
+        (selectedDate) =>
+          format(selectedDate, "MM-yyyy") === format(date, "MM-yyyy")
+      );
+
+      if (isSelected) {
+        return current.filter(
+          (selectedDate) =>
+            format(selectedDate, "MM-yyyy") !== format(date, "MM-yyyy")
+        );
+      } else {
+        return [...current, date];
+      }
+    });
   };
 
   return (
@@ -138,19 +159,35 @@ const CommunicationTypes = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="frequency">Frequência</Label>
-              <Select value={frequency} onValueChange={setFrequency}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a frequência" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="diario">Diário</SelectItem>
-                  <SelectItem value="quinzenal">Quinzenal</SelectItem>
-                  <SelectItem value="mensal">Mensal</SelectItem>
-                  <SelectItem value="trimestral">Trimestral</SelectItem>
-                  <SelectItem value="semestral">Semestral</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>Meses de Ocorrência</Label>
+              <div className="border rounded-md p-2">
+                <Calendar
+                  mode="multiple"
+                  selected={selectedMonths}
+                  onSelect={(dates) => {
+                    if (dates) {
+                      setSelectedMonths(Array.isArray(dates) ? dates : [dates]);
+                    }
+                  }}
+                  locale={ptBR}
+                  disabled={(date) => {
+                    // Desabilita dias que não são o primeiro dia do mês
+                    return date.getDate() !== 1;
+                  }}
+                  modifiersStyles={{
+                    selected: {
+                      backgroundColor: "var(--primary)",
+                      color: "white",
+                    },
+                  }}
+                />
+              </div>
+              <div className="mt-2 text-sm text-muted-foreground">
+                Meses selecionados:{" "}
+                {selectedMonths
+                  .map((date) => format(date, "MMMM", { locale: ptBR }))
+                  .join(", ")}
+              </div>
             </div>
           </div>
 
