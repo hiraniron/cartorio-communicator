@@ -19,6 +19,7 @@ export const CommunicationTypeForm = () => {
   const [name, setName] = useState("");
   const [customName, setCustomName] = useState("");
   const [description, setDescription] = useState("");
+  const [whatToInform, setWhatToInform] = useState("");
   const [deadlines, setDeadlines] = useState<string[]>([""]);
   const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
   const [year, setYear] = useState("");
@@ -28,7 +29,7 @@ export const CommunicationTypeForm = () => {
     
     const finalName = name === "outros" ? customName : name;
     
-    if (!finalName || !description || deadlines.some(d => !d) || selectedMonths.length === 0 || !year) {
+    if (!finalName || !description || !whatToInform || deadlines.some(d => !d) || selectedMonths.length === 0 || !year) {
       toast.error("Por favor, preencha todos os campos");
       return;
     }
@@ -54,6 +55,7 @@ export const CommunicationTypeForm = () => {
     setName("");
     setCustomName("");
     setDescription("");
+    setWhatToInform("");
     setDeadlines([""]);
     setSelectedMonths([]);
     setYear("");
@@ -130,6 +132,16 @@ export const CommunicationTypeForm = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Descreva o tipo de comunicação"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="whatToInform">O que informar</Label>
+          <Textarea
+            id="whatToInform"
+            value={whatToInform}
+            onChange={(e) => setWhatToInform(e.target.value)}
+            placeholder="Descreva quais informações devem ser fornecidas"
           />
         </div>
 
