@@ -23,13 +23,14 @@ export default function NotaryOfficeUsers() {
     queryKey: ["users", id],
     queryFn: async () => {
       if (!id) return [];
+      
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("notary_office_id", id);
+        .eq("notary_office_id", id)
+        .throwOnError();
 
       if (error) {
-        console.error("Error fetching users:", error);
         toast.error("Erro ao carregar usuários");
         throw error;
       }
@@ -37,24 +38,27 @@ export default function NotaryOfficeUsers() {
       return data || [];
     },
     enabled: !!id,
+    retry: 1,
+    refetchOnWindowFocus: false
   });
 
   const handleAddUser = async (data: any) => {
     try {
-      const { error: authError } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
       });
-      if (authError) throw authError;
 
-      // Create profile for the new user
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("No user data returned");
+
       const { error: profileError } = await supabase
         .from("profiles")
         .insert({
-          id: data.id,
+          id: authData.user.id,
           full_name: data.fullName,
           notary_office_id: id,
-          role: "staff"
+          role: data.role
         });
 
       if (profileError) throw profileError;
