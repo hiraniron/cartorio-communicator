@@ -23,14 +23,14 @@ const Index = () => {
     const fetchCommunications = async () => {
       try {
         const { data, error } = await supabase
-          .from('communication_types')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from("communication_types")
+          .select("*")
+          .order("created_at", { ascending: false });
 
         if (error) throw error;
         setCommunications(data || []);
       } catch (error) {
-        console.error('Error fetching communications:', error);
+        console.error("Error fetching communications:", error);
       } finally {
         setLoading(false);
       }
@@ -40,13 +40,13 @@ const Index = () => {
 
     // Subscribe to changes
     const channel = supabase
-      .channel('schema-db-changes')
+      .channel("schema-db-changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'communication_types'
+          event: "*",
+          schema: "public",
+          table: "communication_types",
         },
         () => {
           fetchCommunications();
@@ -87,9 +87,17 @@ const Index = () => {
                 Dias: {comm.deadlines.join(", ")}
               </p>
               <p className="text-gray-600">
-                Meses: {comm.selected_months.map(month => 
-                  format(new Date(month), "MMMM", { locale: ptBR })
-                ).join(", ")}
+                Meses:{" "}
+                {comm.selected_months
+                  .map((month) => {
+                    try {
+                      return format(new Date(month), "MMMM", { locale: ptBR });
+                    } catch (error) {
+                      console.error("Error formatting month:", month);
+                      return month;
+                    }
+                  })
+                  .join(", ")}
               </p>
               <p className="text-gray-600">Ano: {comm.year}</p>
             </div>
