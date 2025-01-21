@@ -6,7 +6,6 @@ export interface CommunicationType {
   what_to_inform: string;
   deadlines: number[];
   selected_months: string[];
-  year: number;
   created_at?: string;
   updated_at?: string;
 }

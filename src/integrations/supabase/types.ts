@@ -20,7 +20,6 @@ export type Database = {
           selected_months: string[]
           updated_at: string
           what_to_inform: string
-          year: number
         }
         Insert: {
           created_at?: string
@@ -32,7 +31,6 @@ export type Database = {
           selected_months: string[]
           updated_at?: string
           what_to_inform: string
-          year: number
         }
         Update: {
           created_at?: string
@@ -44,7 +42,6 @@ export type Database = {
           selected_months?: string[]
           updated_at?: string
           what_to_inform?: string
-          year?: number
         }
         Relationships: []
       }

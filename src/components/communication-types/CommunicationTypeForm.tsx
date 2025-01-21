@@ -9,7 +9,6 @@ import { CommunicationNameSelect } from "./form/CommunicationNameSelect";
 import { DescriptionInput } from "./form/DescriptionInput";
 import { WhatToInformInput } from "./form/WhatToInformInput";
 import { DeadlinesInput } from "./form/DeadlinesInput";
-import { YearInput } from "./form/YearInput";
 import { format } from "date-fns";
 import type { CommunicationType } from "@/types/communication";
 
@@ -29,14 +28,13 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
   const [selectedMonths, setSelectedMonths] = useState<Date[]>(
     initialData?.selected_months.map(date => new Date(date)) ?? []
   );
-  const [year, setYear] = useState(initialData?.year.toString() ?? "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const finalName = name === "outros" ? customName : name;
     
-    if (!finalName || !description || !whatToInform || deadlines.some(d => !d) || selectedMonths.length === 0 || !year) {
+    if (!finalName || !description || !whatToInform || deadlines.some(d => !d) || selectedMonths.length === 0) {
       toast.error("Por favor, preencha todos os campos");
       return;
     }
@@ -51,12 +49,6 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
       return;
     }
 
-    const yearNumber = parseInt(year);
-    if (yearNumber < 2024 || yearNumber > 2100) {
-      toast.error("Por favor, insira um ano válido (entre 2024 e 2100)");
-      return;
-    }
-
     try {
       const data = {
         name: finalName,
@@ -64,8 +56,7 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
         description,
         what_to_inform: whatToInform,
         deadlines: deadlines.map(d => parseInt(d)),
-        selected_months: selectedMonths.map(date => format(date, 'yyyy-MM-dd')),
-        year: yearNumber
+        selected_months: selectedMonths.map(date => format(date, 'yyyy-MM-dd'))
       };
 
       if (initialData) {
@@ -141,11 +132,6 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
         <MonthSelector 
           selectedMonths={selectedMonths} 
           setSelectedMonths={setSelectedMonths} 
-        />
-
-        <YearInput
-          year={year}
-          onYearChange={setYear}
         />
 
         <Button type="submit" className="w-full">
