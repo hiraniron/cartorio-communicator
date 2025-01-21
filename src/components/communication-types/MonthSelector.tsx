@@ -34,9 +34,28 @@ export const MonthSelector = ({ selectedMonths, setSelectedMonths }: MonthSelect
     }
   };
 
+  const selectAllMonths = () => {
+    if (selectedMonths.length === months.length) {
+      setSelectedMonths([]);
+    } else {
+      setSelectedMonths(months.map(month => month.date));
+    }
+  };
+
   return (
     <div className="space-y-2">
-      <Label>Meses de Ocorrência</Label>
+      <div className="flex items-center justify-between">
+        <Label>Meses de Ocorrência</Label>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={selectAllMonths}
+          className="text-xs"
+        >
+          {selectedMonths.length === months.length ? "Desmarcar Todos" : "Selecionar Todos"}
+        </Button>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {months.map(({ date, name }) => {
           const isSelected = selectedMonths.some(
