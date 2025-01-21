@@ -6,6 +6,7 @@ import "./App.css";
 
 import NotaryOfficeRegistration from "@/pages/NotaryOfficeRegistration";
 import RegisteredCommunications from "@/pages/RegisteredCommunications";
+import Auth from "@/pages/Auth";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<NotaryOfficeRegistration />} />
+          <Route path="/auth" element={<Auth />} />
           <Route
             path="/registered-communications"
             element={<RegisteredCommunications />}
