@@ -1,12 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Home, FileText, Building2, MessageSquare, Settings2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -43,37 +37,21 @@ export const Navigation = () => {
             Tipos de Comunicação
           </Button>
         </Link>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant={
-                isActive("/notary-registration") || 
-                isActive("/notary-offices") 
-                  ? "default" 
-                  : "ghost"
-              }
-              className="gap-2"
-            >
-              <Settings2 className="h-4 w-4" />
-              Administração
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <Link to="/notary-registration">
-              <DropdownMenuItem>
-                <Building2 className="h-4 w-4 mr-2" />
-                Editar Cartório
-              </DropdownMenuItem>
-            </Link>
-            <Link to="/notary-offices">
-              <DropdownMenuItem>
-                <Building2 className="h-4 w-4 mr-2" />
-                Listar Cartórios
-              </DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Link to="/admin">
+          <Button 
+            variant={
+              isActive("/admin") || 
+              isActive("/notary-registration") || 
+              isActive("/notary-offices") 
+                ? "default" 
+                : "ghost"
+            }
+            className="gap-2"
+          >
+            <Settings2 className="h-4 w-4" />
+            Administração
+          </Button>
+        </Link>
       </div>
     </nav>
   );
