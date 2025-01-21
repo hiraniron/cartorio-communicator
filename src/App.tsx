@@ -6,7 +6,6 @@ import "./App.css";
 
 import NotaryOfficeRegistration from "@/pages/NotaryOfficeRegistration";
 import RegisteredCommunications from "@/pages/RegisteredCommunications";
-import CommunicationTypeForm from "@/pages/CommunicationTypeForm";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -20,14 +19,6 @@ function App() {
           <Route
             path="/registered-communications"
             element={<RegisteredCommunications />}
-          />
-          <Route
-            path="/communication-type-form"
-            element={<CommunicationTypeForm />}
-          />
-          <Route
-            path="/communication-type-form/:id"
-            element={<CommunicationTypeForm />}
           />
         </Routes>
       </BrowserRouter>
