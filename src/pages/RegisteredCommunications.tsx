@@ -43,21 +43,19 @@ const RegisteredCommunications = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-gray-500">Carregando...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <PageHeader />
-        <CommunicationList 
-          communications={communications}
-          onDelete={handleDelete}
-        />
-      </div>
+    <div className="max-w-7xl mx-auto space-y-8">
+      <PageHeader />
+      <CommunicationList 
+        communications={communications}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };
