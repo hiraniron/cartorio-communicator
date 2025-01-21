@@ -1,10 +1,10 @@
-import { CommunicationType } from "@/types/communication";
+import type { CommunicationType } from "@/types/communication";
 import { CommunicationCard } from "./CommunicationCard";
 
 interface CommunicationsListProps {
   communications: CommunicationType[];
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (id: number) => void;
+  onSubmit: (id: string) => void;
 }
 
 export const CommunicationsList = ({

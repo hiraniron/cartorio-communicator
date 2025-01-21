@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatsOverview } from "@/components/dashboard/StatsOverview";
 import { CommunicationsList } from "@/components/dashboard/CommunicationsList";
-import { CommunicationType } from "@/types/communication";
+import type { CommunicationType } from "@/types/communication";
 
 const Dashboard = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -17,7 +17,12 @@ const Dashboard = () => {
         .from('communication_types')
         .select('*');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching communications:', error);
+        toast.error('Erro ao carregar comunicações');
+        throw error;
+      }
+      
       return data as CommunicationType[];
     },
   });
@@ -40,16 +45,18 @@ const Dashboard = () => {
   };
 
   if (isLoading) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+        <div className="text-gray-500">Carregando...</div>
+      </div>
+    );
   }
-
-  const pendingCount = communications.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
         <DashboardHeader />
-        <StatsOverview pendingCount={pendingCount} />
+        <StatsOverview pendingCount={communications.length} />
         <CommunicationsList
           communications={communications}
           onFileUpload={handleFileUpload}

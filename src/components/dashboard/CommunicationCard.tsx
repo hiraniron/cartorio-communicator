@@ -2,20 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Paperclip } from "lucide-react";
-
-interface CommunicationType {
-  id: number;
-  name: string;
-  custom_name: string | null;
-  description: string;
-  what_to_inform: string;
-  deadlines: string[];
-}
+import type { CommunicationType } from "@/types/communication";
 
 interface CommunicationCardProps {
   communication: CommunicationType;
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (id: number) => void;
+  onSubmit: (id: string) => void;
 }
 
 export const CommunicationCard = ({
