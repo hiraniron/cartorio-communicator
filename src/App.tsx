@@ -20,11 +20,12 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<PeriodSelector />} />
+          <Route path="/period-selector" element={<PeriodSelector />} />
           <Route path="/dashboard/:year/:month" element={<Dashboard />} />
           <Route path="/communication-types" element={<CommunicationTypes />} />
           <Route path="/registered-communications" element={<RegisteredCommunications />} />
           <Route path="/edit-communication/:id" element={<EditCommunication />} />
+          <Route path="/dashboard" element={<Navigate to="/period-selector" replace />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
