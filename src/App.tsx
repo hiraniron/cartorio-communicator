@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import CommunicationTypes from "./pages/CommunicationTypes";
 import RegisteredCommunications from "./pages/RegisteredCommunications";
 import EditCommunication from "./pages/EditCommunication";
+import NotaryOfficeRegistration from "./pages/NotaryOfficeRegistration";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/communication-types" element={<CommunicationTypes />} />
           <Route path="/registered-communications" element={<RegisteredCommunications />} />
           <Route path="/edit-communication/:id" element={<EditCommunication />} />
+          <Route path="/register-notary" element={<NotaryOfficeRegistration />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
