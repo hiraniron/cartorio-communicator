@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, FileText, Building2, MessageSquare } from "lucide-react";
+import { Home, FileText, Building2, MessageSquare, List } from "lucide-react";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -44,6 +44,15 @@ export const Navigation = () => {
           >
             <Building2 className="h-4 w-4" />
             Cartório
+          </Button>
+        </Link>
+        <Link to="/notary-offices">
+          <Button 
+            variant={isActive("/notary-offices") ? "default" : "ghost"}
+            className="gap-2"
+          >
+            <List className="h-4 w-4" />
+            Listar Cartórios
           </Button>
         </Link>
       </div>
