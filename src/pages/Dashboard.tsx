@@ -15,17 +15,20 @@ const Dashboard = () => {
   const { data: communications = [], isLoading } = useQuery({
     queryKey: ['communication-types', year, month],
     queryFn: async () => {
+      // Create a date string for the first day of the selected month
+      const dateString = `${year}-${month.padStart(2, '0')}-01`;
+      
       const { data, error } = await supabase
         .from('communication_types')
         .select('*')
-        .contains('selected_months', [month?.toString()]);
-      
+        .contains('selected_months', [dateString]);
+
       if (error) {
         console.error('Error fetching communications:', error);
         toast.error('Erro ao carregar comunicações');
         throw error;
       }
-      
+
       return data as CommunicationType[];
     },
   });
