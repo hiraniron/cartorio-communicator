@@ -31,6 +31,7 @@ import { useState } from "react";
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
   const [editingUser, setEditingUser] = useState<any>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const { data: users, isLoading, error, refetch } = useQuery({
     queryKey: ["users", id],
@@ -84,6 +85,7 @@ export default function NotaryOfficeUsers() {
       }
 
       toast.success("Usuário cadastrado com sucesso!");
+      setIsSheetOpen(false);
       refetch();
     } catch (error) {
       console.error("Error adding user:", error);
@@ -105,6 +107,7 @@ export default function NotaryOfficeUsers() {
 
       toast.success("Usuário atualizado com sucesso!");
       setEditingUser(null);
+      setIsSheetOpen(false);
       refetch();
     } catch (error) {
       console.error("Error updating user:", error);
@@ -138,7 +141,7 @@ export default function NotaryOfficeUsers() {
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Usuários do Cartório</h2>
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button>
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -152,9 +155,16 @@ export default function NotaryOfficeUsers() {
                 </SheetTitle>
               </SheetHeader>
               <UserRegistrationForm 
-                onSubmit={editingUser ? handleEditUser : handleAddUser} 
-                onBack={() => setEditingUser(null)}
-                initialData={editingUser}
+                onSubmit={editingUser ? handleEditUser : handleAddUser}
+                onBack={() => {
+                  setEditingUser(null);
+                  setIsSheetOpen(false);
+                }}
+                initialData={editingUser ? {
+                  email: editingUser.email,
+                  fullName: editingUser.full_name,
+                  role: editingUser.role
+                } : undefined}
               />
             </SheetContent>
           </Sheet>
@@ -190,6 +200,7 @@ export default function NotaryOfficeUsers() {
                         size="icon"
                         onClick={() => {
                           setEditingUser(user);
+                          setIsSheetOpen(true);
                         }}
                       >
                         <Pencil className="h-4 w-4" />
