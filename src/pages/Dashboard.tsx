@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,15 +8,22 @@ import { StatsOverview } from "@/components/dashboard/StatsOverview";
 import { CommunicationsList } from "@/components/dashboard/CommunicationsList";
 import type { CommunicationType } from "@/types/communication";
 
+const months = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
 const Dashboard = () => {
+  const { year, month } = useParams();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { data: communications = [], isLoading } = useQuery({
-    queryKey: ['communication-types'],
+    queryKey: ['communication-types', year, month],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('communication_types')
-        .select('*');
+        .select('*')
+        .contains('selected_months', [month]);
       
       if (error) {
         console.error('Error fetching communications:', error);
@@ -56,6 +64,9 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
         <DashboardHeader />
+        <div className="text-center text-lg font-medium text-gray-600">
+          Comunicações para {months[parseInt(month!) - 1]} de {year}
+        </div>
         <StatsOverview pendingCount={communications.length} />
         <CommunicationsList
           communications={communications}
