@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { MonthSelector } from "./MonthSelector";
 import { CommunicationNameSelect } from "./form/CommunicationNameSelect";
@@ -10,15 +11,25 @@ import { WhatToInformInput } from "./form/WhatToInformInput";
 import { DeadlinesInput } from "./form/DeadlinesInput";
 import { YearInput } from "./form/YearInput";
 import { format } from "date-fns";
+import type { CommunicationType } from "@/types/communication";
 
-export const CommunicationTypeForm = () => {
-  const [name, setName] = useState("");
-  const [customName, setCustomName] = useState("");
-  const [description, setDescription] = useState("");
-  const [whatToInform, setWhatToInform] = useState("");
-  const [deadlines, setDeadlines] = useState<string[]>([""]);
-  const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
-  const [year, setYear] = useState("");
+interface CommunicationTypeFormProps {
+  initialData?: CommunicationType;
+}
+
+export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProps) => {
+  const navigate = useNavigate();
+  const [name, setName] = useState(initialData?.name ?? "");
+  const [customName, setCustomName] = useState(initialData?.custom_name ?? "");
+  const [description, setDescription] = useState(initialData?.description ?? "");
+  const [whatToInform, setWhatToInform] = useState(initialData?.what_to_inform ?? "");
+  const [deadlines, setDeadlines] = useState<string[]>(
+    initialData?.deadlines.map(String) ?? [""]
+  );
+  const [selectedMonths, setSelectedMonths] = useState<Date[]>(
+    initialData?.selected_months.map(date => new Date(date)) ?? []
+  );
+  const [year, setYear] = useState(initialData?.year.toString() ?? "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,32 +58,39 @@ export const CommunicationTypeForm = () => {
     }
 
     try {
-      const { error } = await supabase
-        .from('communication_types')
-        .insert({
-          name: finalName,
-          custom_name: name === "outros" ? customName : null,
-          description,
-          what_to_inform: whatToInform,
-          deadlines: deadlines.map(d => parseInt(d)),
-          selected_months: selectedMonths.map(date => format(date, 'yyyy-MM-dd')),
-          year: yearNumber
-        });
+      const data = {
+        name: finalName,
+        custom_name: name === "outros" ? customName : null,
+        description,
+        what_to_inform: whatToInform,
+        deadlines: deadlines.map(d => parseInt(d)),
+        selected_months: selectedMonths.map(date => format(date, 'yyyy-MM-dd')),
+        year: yearNumber
+      };
 
-      if (error) throw error;
+      if (initialData) {
+        const { error } = await supabase
+          .from('communication_types')
+          .update(data)
+          .eq('id', initialData.id);
 
-      toast.success("Tipo de comunicação cadastrado com sucesso!");
+        if (error) throw error;
+
+        toast.success("Comunicação atualizada com sucesso!");
+      } else {
+        const { error } = await supabase
+          .from('communication_types')
+          .insert(data);
+
+        if (error) throw error;
+
+        toast.success("Comunicação cadastrada com sucesso!");
+      }
       
-      setName("");
-      setCustomName("");
-      setDescription("");
-      setWhatToInform("");
-      setDeadlines([""]);
-      setSelectedMonths([]);
-      setYear("");
+      navigate('/registered-communications');
     } catch (error) {
       console.error('Error saving communication type:', error);
-      toast.error("Erro ao cadastrar tipo de comunicação");
+      toast.error("Erro ao salvar comunicação");
     }
   };
 
@@ -131,7 +149,7 @@ export const CommunicationTypeForm = () => {
         />
 
         <Button type="submit" className="w-full">
-          Cadastrar
+          {initialData ? "Atualizar" : "Cadastrar"}
         </Button>
       </form>
     </Card>

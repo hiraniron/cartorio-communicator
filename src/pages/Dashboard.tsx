@@ -35,7 +35,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleSubmit = (id: number) => {
+  const handleSubmit = (id: string) => {
     if (selectedFile) {
       toast.success("Comprovante enviado com sucesso!");
       setSelectedFile(null);
