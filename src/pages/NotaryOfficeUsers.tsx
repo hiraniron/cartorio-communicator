@@ -19,22 +19,24 @@ import { toast } from "sonner";
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
 
-  const { data: users, isLoading } = useQuery({
+  const { data: users, isLoading, error } = useQuery({
     queryKey: ["users", id],
     queryFn: async () => {
       if (!id) return [];
       
+      console.log("Fetching users for notary office:", id);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("notary_office_id", id)
-        .throwOnError();
+        .eq("notary_office_id", id);
 
       if (error) {
+        console.error("Error fetching users:", error);
         toast.error("Erro ao carregar usuários");
         throw error;
       }
 
+      console.log("Fetched users:", data);
       return data || [];
     },
     enabled: !!id,
@@ -52,6 +54,8 @@ export default function NotaryOfficeUsers() {
       if (authError) throw authError;
       if (!authData.user) throw new Error("No user data returned");
 
+      console.log("Created auth user:", authData.user);
+
       const { error: profileError } = await supabase
         .from("profiles")
         .insert({
@@ -61,7 +65,10 @@ export default function NotaryOfficeUsers() {
           role: data.role
         });
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error("Error creating profile:", profileError);
+        throw profileError;
+      }
 
       toast.success("Usuário cadastrado com sucesso!");
     } catch (error) {
@@ -69,6 +76,10 @@ export default function NotaryOfficeUsers() {
       toast.error("Erro ao cadastrar usuário");
     }
   };
+
+  if (error) {
+    console.error("Query error:", error);
+  }
 
   return (
     <div className="container mx-auto py-6">
