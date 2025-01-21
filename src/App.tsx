@@ -12,7 +12,6 @@ import RegisteredCommunications from "@/pages/RegisteredCommunications";
 import CommunicationTypes from "@/pages/CommunicationTypes";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/Dashboard";
-import Admin from "@/pages/Admin";
 import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
 
 // Create a client
@@ -35,7 +34,6 @@ function App() {
                   <div className="p-6">
                     <Routes>
                       <Route path="/" element={<Index />} />
-                      <Route path="/admin" element={<Admin />} />
                       <Route path="/notary-registration" element={<NotaryOfficeRegistration />} />
                       <Route path="/notary-offices" element={<NotaryOfficesList />} />
                       <Route path="/communication-types" element={<CommunicationTypes />} />
