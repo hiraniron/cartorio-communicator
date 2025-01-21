@@ -59,9 +59,17 @@ const NotaryOfficeRegistration = () => {
 
   const onNotarySubmit = async (values: z.infer<typeof notaryOfficeSchema>) => {
     try {
+      // Ensure all required fields are present
+      const notaryData = {
+        name: values.name,
+        address: values.address,
+        city: values.city,
+        phone: values.phone,
+      };
+
       const { data, error } = await supabase
         .from("notary_offices")
-        .insert(values)
+        .insert(notaryData)
         .select()
         .single();
 
