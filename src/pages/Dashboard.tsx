@@ -4,28 +4,33 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Calendar, Clock, Paperclip, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
-const communications = [
-  {
-    id: 1,
-    title: "SIRC - INSS e PFB",
-    deadline: "2024-03-01",
-    status: "pending",
-    description: "Registro dos óbitos ocorridos no dia útil imediatamente anterior",
-  },
-  {
-    id: 2,
-    title: "FECOM",
-    deadline: "2024-03-05",
-    status: "completed",
-    description: "Atos gratuitos e relatório de emolumentos para fins de renda mínima",
-  },
-];
+interface CommunicationType {
+  id: number;
+  name: string;
+  custom_name: string | null;
+  description: string;
+  what_to_inform: string;
+  deadlines: string[];
+  selected_months: Date[];
+  year: string;
+}
 
 const Dashboard = () => {
-  console.log("Dashboard component rendered");
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { data: communications = [], isLoading } = useQuery({
+    queryKey: ['communication-types'],
+    queryFn: async () => {
+      const response = await fetch('/api/communication-types');
+      if (!response.ok) {
+        throw new Error('Failed to fetch communications');
+      }
+      const data = await response.json();
+      return data as CommunicationType[];
+    },
+  });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Tentando fazer upload de arquivo");
@@ -49,6 +54,12 @@ const Dashboard = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
+
+  const pendingCount = communications.length;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
@@ -65,7 +76,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="font-medium">Pendentes</h3>
-                <p className="text-2xl font-bold">3</p>
+                <p className="text-2xl font-bold">{pendingCount}</p>
               </div>
             </div>
           </Card>
@@ -77,7 +88,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="font-medium">No Prazo</h3>
-                <p className="text-2xl font-bold">12</p>
+                <p className="text-2xl font-bold">{pendingCount}</p>
               </div>
             </div>
           </Card>
@@ -89,7 +100,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="font-medium">Total</h3>
-                <p className="text-2xl font-bold">15</p>
+                <p className="text-2xl font-bold">{pendingCount}</p>
               </div>
             </div>
           </Card>
@@ -104,22 +115,21 @@ const Dashboard = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-sm font-medium text-gray-500">
-                      {comm.status === "pending" ? (
-                        <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
-                          Pendente
-                        </span>
-                      ) : (
-                        <span className="text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                          Concluído
-                        </span>
-                      )}
+                      <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
+                        Pendente
+                      </span>
                     </span>
-                    <h3 className="text-xl font-semibold mt-2">{comm.title}</h3>
+                    <h3 className="text-xl font-semibold mt-2">
+                      {comm.name === 'outros' ? comm.custom_name : comm.name}
+                    </h3>
                     <p className="text-gray-500 mt-1">{comm.description}</p>
+                    <p className="text-gray-500 mt-1">O que informar: {comm.what_to_inform}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Prazo</p>
-                    <p className="font-medium">{new Date(comm.deadline).toLocaleDateString()}</p>
+                    <p className="font-medium">
+                      {comm.deadlines.join(', ')} de cada mês
+                    </p>
                   </div>
                 </div>
 
