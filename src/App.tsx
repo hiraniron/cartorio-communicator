@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import CommunicationTypes from "./pages/CommunicationTypes";
 import Dashboard from "./pages/Dashboard";
+import RegisteredCommunications from "./pages/RegisteredCommunications";
+import EditCommunication from "./pages/EditCommunication";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +21,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/communication-types" element={<CommunicationTypes />} />
+          <Route path="/registered-communications" element={<RegisteredCommunications />} />
+          <Route path="/edit-communication/:id" element={<EditCommunication />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
