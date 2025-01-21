@@ -17,23 +17,34 @@ const Auth = () => {
       
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+          email: email.trim(),
+          password: password.trim(),
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message === "Invalid login credentials") {
+            throw new Error("Email ou senha inválidos");
+          }
+          throw error;
+        }
         
         toast.success("Login realizado com sucesso!");
         navigate("/");
       } else {
         const { error } = await supabase.auth.signUp({
-          email,
-          password,
+          email: email.trim(),
+          password: password.trim(),
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes("already registered")) {
+            throw new Error("Este email já está cadastrado");
+          }
+          throw error;
+        }
         
-        toast.success("Cadastro realizado com sucesso! Verifique seu email.");
+        toast.success("Cadastro realizado com sucesso! Você já pode fazer login.");
+        setMode("login");
       }
     } catch (error: any) {
       console.error("Auth error:", error);

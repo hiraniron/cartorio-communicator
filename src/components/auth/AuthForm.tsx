@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+  email: z.string().email("Email inválido").trim(),
+  password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres").trim(),
 });
 
 interface AuthFormProps {
@@ -46,6 +46,7 @@ const AuthForm = ({ onSubmit, isLoading }: AuthFormProps) => {
                   disabled={isLoading}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -64,6 +65,7 @@ const AuthForm = ({ onSubmit, isLoading }: AuthFormProps) => {
                   disabled={isLoading}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
