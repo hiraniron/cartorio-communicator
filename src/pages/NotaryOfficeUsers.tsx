@@ -11,15 +11,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { UserPlus, Loader2 } from "lucide-react";
+import { UserPlus, Loader2, Pencil, Trash2 } from "lucide-react";
 import { UserRegistrationForm } from "@/components/notary-registration/UserRegistrationForm";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
+  const [editingUser, setEditingUser] = useState<any>(null);
 
-  const { data: users, isLoading, error } = useQuery({
+  const { data: users, isLoading, error, refetch } = useQuery({
     queryKey: ["users", id],
     queryFn: async () => {
       if (!id) return [];
@@ -71,9 +84,48 @@ export default function NotaryOfficeUsers() {
       }
 
       toast.success("Usuário cadastrado com sucesso!");
+      refetch();
     } catch (error) {
       console.error("Error adding user:", error);
       toast.error("Erro ao cadastrar usuário");
+    }
+  };
+
+  const handleEditUser = async (data: any) => {
+    try {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          full_name: data.fullName,
+          role: data.role
+        })
+        .eq('id', editingUser.id);
+
+      if (profileError) throw profileError;
+
+      toast.success("Usuário atualizado com sucesso!");
+      setEditingUser(null);
+      refetch();
+    } catch (error) {
+      console.error("Error updating user:", error);
+      toast.error("Erro ao atualizar usuário");
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .delete()
+        .eq('id', userId);
+
+      if (profileError) throw profileError;
+
+      toast.success("Usuário excluído com sucesso!");
+      refetch();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Erro ao excluir usuário");
     }
   };
 
@@ -95,9 +147,15 @@ export default function NotaryOfficeUsers() {
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>Adicionar Novo Usuário</SheetTitle>
+                <SheetTitle>
+                  {editingUser ? "Editar Usuário" : "Adicionar Novo Usuário"}
+                </SheetTitle>
               </SheetHeader>
-              <UserRegistrationForm onSubmit={handleAddUser} onBack={() => {}} />
+              <UserRegistrationForm 
+                onSubmit={editingUser ? handleEditUser : handleAddUser} 
+                onBack={() => setEditingUser(null)}
+                initialData={editingUser}
+              />
             </SheetContent>
           </Sheet>
         </div>
@@ -107,12 +165,13 @@ export default function NotaryOfficeUsers() {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Função</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={2} className="text-center py-8">
+                <TableCell colSpan={3} className="text-center py-8">
                   <div className="flex items-center justify-center">
                     <Loader2 className="h-6 w-6 animate-spin mr-2" />
                     Carregando usuários...
@@ -124,11 +183,47 @@ export default function NotaryOfficeUsers() {
                 <TableRow key={user.id}>
                   <TableCell>{user.full_name}</TableCell>
                   <TableCell className="capitalize">{user.role}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          setEditingUser(user);
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Tem certeza que deseja excluir o usuário {user.full_name}? Esta ação não pode ser desfeita.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteUser(user.id)}
+                            >
+                              Excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
                   Nenhum usuário cadastrado
                 </TableCell>
               </TableRow>
