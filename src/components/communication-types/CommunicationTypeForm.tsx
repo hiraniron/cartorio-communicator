@@ -14,6 +14,7 @@ import { MonthSelector } from "./MonthSelector";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const CommunicationTypeForm = () => {
   const [name, setName] = useState("");
@@ -24,7 +25,7 @@ export const CommunicationTypeForm = () => {
   const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
   const [year, setYear] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const finalName = name === "outros" ? customName : name;
@@ -50,15 +51,34 @@ export const CommunicationTypeForm = () => {
       return;
     }
 
-    toast.success("Tipo de comunicação cadastrado com sucesso!");
-    
-    setName("");
-    setCustomName("");
-    setDescription("");
-    setWhatToInform("");
-    setDeadlines([""]);
-    setSelectedMonths([]);
-    setYear("");
+    try {
+      const { error } = await supabase
+        .from('communication_types')
+        .insert({
+          name: finalName,
+          custom_name: name === "outros" ? customName : null,
+          description,
+          what_to_inform: whatToInform,
+          deadlines: deadlines.map(d => parseInt(d)),
+          selected_months: selectedMonths,
+          year: yearNumber
+        });
+
+      if (error) throw error;
+
+      toast.success("Tipo de comunicação cadastrado com sucesso!");
+      
+      setName("");
+      setCustomName("");
+      setDescription("");
+      setWhatToInform("");
+      setDeadlines([""]);
+      setSelectedMonths([]);
+      setYear("");
+    } catch (error) {
+      console.error('Error saving communication type:', error);
+      toast.error("Erro ao cadastrar tipo de comunicação");
+    }
   };
 
   const addDeadline = () => {
