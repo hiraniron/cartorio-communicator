@@ -18,8 +18,14 @@ const months = [
 export const PeriodSelector = () => {
   const navigate = useNavigate();
   const currentDate = new Date();
-  const [selectedMonth, setSelectedMonth] = useState((currentDate.getMonth() + 1).toString());
-  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString());
+  // Get previous month (if current month is January, set to December and decrease year)
+  const previousMonth = currentDate.getMonth() === 0 ? 12 : currentDate.getMonth();
+  const previousMonthYear = currentDate.getMonth() === 0 
+    ? currentDate.getFullYear() - 1 
+    : currentDate.getFullYear();
+
+  const [selectedMonth, setSelectedMonth] = useState(previousMonth.toString());
+  const [selectedYear, setSelectedYear] = useState(previousMonthYear.toString());
 
   const years = Array.from(
     { length: 5 },
