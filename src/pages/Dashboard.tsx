@@ -18,9 +18,16 @@ const Dashboard = () => {
       // Format month to ensure it has 2 digits (e.g., "01" for January)
       const formattedMonth = month?.padStart(2, '0');
       
+      // Create a date string for the first day of the selected month and year
+      const startDate = `${year}-${formattedMonth}-01`;
+      // Create a date string for the last day of the selected month and year
+      const lastDay = new Date(Number(year), Number(month), 0).getDate();
+      const endDate = `${year}-${formattedMonth}-${lastDay}`;
+      
       const { data, error } = await supabase
         .from('communication_types')
-        .select('*');
+        .select('*')
+        .overlaps('selected_months', [startDate, endDate]);
 
       if (error) {
         console.error('Error fetching communications:', error);
@@ -28,15 +35,7 @@ const Dashboard = () => {
         throw error;
       }
 
-      // Filter communications that have the current month in their selected_months array
-      const filteredData = data.filter(comm => {
-        return comm.selected_months.some(selectedMonth => {
-          const monthFromSelected = new Date(selectedMonth).getMonth() + 1;
-          return monthFromSelected.toString() === month;
-        });
-      });
-
-      return filteredData as CommunicationType[];
+      return data as CommunicationType[];
     },
   });
 
