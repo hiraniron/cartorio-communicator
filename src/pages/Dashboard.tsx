@@ -15,13 +15,12 @@ const Dashboard = () => {
   const { data: communications = [], isLoading } = useQuery({
     queryKey: ['communication-types', year, month],
     queryFn: async () => {
-      // Create a date string for the first day of the selected month
-      const dateString = `${year}-${month.padStart(2, '0')}-01`;
+      // Format month to ensure it has 2 digits (e.g., "01" for January)
+      const formattedMonth = month?.padStart(2, '0');
       
       const { data, error } = await supabase
         .from('communication_types')
-        .select('*')
-        .contains('selected_months', [dateString]);
+        .select('*');
 
       if (error) {
         console.error('Error fetching communications:', error);
@@ -29,7 +28,15 @@ const Dashboard = () => {
         throw error;
       }
 
-      return data as CommunicationType[];
+      // Filter communications that have the current month in their selected_months array
+      const filteredData = data.filter(comm => {
+        return comm.selected_months.some(selectedMonth => {
+          const monthFromSelected = new Date(selectedMonth).getMonth() + 1;
+          return monthFromSelected.toString() === month;
+        });
+      });
+
+      return filteredData as CommunicationType[];
     },
   });
 
