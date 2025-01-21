@@ -8,6 +8,7 @@ import "./App.css";
 import Index from "@/pages/Index";
 import NotaryOfficeRegistration from "@/pages/NotaryOfficeRegistration";
 import NotaryOfficesList from "@/pages/NotaryOfficesList";
+import NotaryOfficeUsers from "@/pages/NotaryOfficeUsers";
 import RegisteredCommunications from "@/pages/RegisteredCommunications";
 import CommunicationTypes from "@/pages/CommunicationTypes";
 import Auth from "@/pages/Auth";
@@ -36,6 +37,7 @@ function App() {
                       <Route path="/" element={<Index />} />
                       <Route path="/notary-registration" element={<NotaryOfficeRegistration />} />
                       <Route path="/notary-offices" element={<NotaryOfficesList />} />
+                      <Route path="/notary-offices/:id/users" element={<NotaryOfficeUsers />} />
                       <Route path="/communication-types" element={<CommunicationTypes />} />
                       <Route
                         path="/registered-communications"

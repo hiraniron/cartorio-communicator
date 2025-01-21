@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,16 +19,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Edit, UserPlus, Users } from "lucide-react";
-import { UserRegistrationForm } from "@/components/notary-registration/UserRegistrationForm";
+import { Edit, Users } from "lucide-react";
 import { NotaryOfficeForm } from "@/components/notary-registration/NotaryOfficeForm";
 import { toast } from "sonner";
 
 export default function NotaryOfficesList() {
   const [selectedNotaryId, setSelectedNotaryId] = useState<string | null>(null);
-  const [showUserForm, setShowUserForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [showUsersList, setShowUsersList] = useState(false);
 
   const { data: notaryOffices, refetch } = useQuery({
     queryKey: ["notaryOffices"],
@@ -39,36 +37,6 @@ export default function NotaryOfficesList() {
       return data;
     },
   });
-
-  const { data: users } = useQuery({
-    queryKey: ["users", selectedNotaryId],
-    queryFn: async () => {
-      if (!selectedNotaryId) return [];
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("notary_office_id", selectedNotaryId);
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!selectedNotaryId && showUsersList,
-  });
-
-  const handleAddUser = async (data: any) => {
-    try {
-      const { error: authError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-      });
-      if (authError) throw authError;
-
-      toast.success("Usuário cadastrado com sucesso!");
-      setShowUserForm(false);
-    } catch (error) {
-      toast.error("Erro ao cadastrar usuário");
-      console.error(error);
-    }
-  };
 
   const handleEditNotary = async (data: any) => {
     try {
@@ -134,57 +102,11 @@ export default function NotaryOfficesList() {
                     </SheetContent>
                   </Sheet>
 
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => {
-                          setSelectedNotaryId(notary.id);
-                          setShowUsersList(true);
-                        }}
-                      >
-                        <Users className="h-4 w-4" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent>
-                      <SheetHeader>
-                        <SheetTitle>Usuários do Cartório</SheetTitle>
-                      </SheetHeader>
-                      <div className="mt-4">
-                        <Button
-                          onClick={() => setShowUserForm(true)}
-                          className="mb-4"
-                        >
-                          <UserPlus className="h-4 w-4 mr-2" />
-                          Adicionar Usuário
-                        </Button>
-                        {showUserForm ? (
-                          <UserRegistrationForm
-                            onSubmit={handleAddUser}
-                            onBack={() => setShowUserForm(false)}
-                          />
-                        ) : (
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Nome</TableHead>
-                                <TableHead>Função</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {users?.map((user) => (
-                                <TableRow key={user.id}>
-                                  <TableCell>{user.full_name}</TableCell>
-                                  <TableCell>{user.role}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        )}
-                      </div>
-                    </SheetContent>
-                  </Sheet>
+                  <Link to={`/notary-offices/${notary.id}/users`}>
+                    <Button variant="outline" size="icon">
+                      <Users className="h-4 w-4" />
+                    </Button>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
