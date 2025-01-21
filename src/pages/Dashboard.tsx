@@ -8,11 +8,6 @@ import { StatsOverview } from "@/components/dashboard/StatsOverview";
 import { CommunicationsList } from "@/components/dashboard/CommunicationsList";
 import type { CommunicationType } from "@/types/communication";
 
-const months = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-];
-
 const Dashboard = () => {
   const { year, month } = useParams();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -63,10 +58,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
-        <DashboardHeader />
-        <div className="text-center text-lg font-medium text-gray-600">
-          Comunicações para {months[parseInt(month!) - 1]} de {year}
-        </div>
+        <DashboardHeader month={month} year={year} />
         <StatsOverview pendingCount={communications.length} />
         <CommunicationsList
           communications={communications}
