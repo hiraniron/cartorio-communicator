@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Calendar, Clock, Paperclip, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface CommunicationType {
   id: number;
@@ -23,33 +24,28 @@ const Dashboard = () => {
   const { data: communications = [], isLoading } = useQuery({
     queryKey: ['communication-types'],
     queryFn: async () => {
-      const response = await fetch('/api/communication-types');
-      if (!response.ok) {
-        throw new Error('Failed to fetch communications');
-      }
-      const data = await response.json();
+      const { data, error } = await supabase
+        .from('communication_types')
+        .select('*');
+      
+      if (error) throw error;
       return data as CommunicationType[];
     },
   });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Tentando fazer upload de arquivo");
     const file = event.target.files?.[0];
     if (file) {
-      console.log("Arquivo selecionado:", file.name);
       setSelectedFile(file);
       toast.success("Arquivo selecionado com sucesso!");
     }
   };
 
   const handleSubmit = (id: number) => {
-    console.log("Tentando enviar arquivo para comunicação ID:", id);
     if (selectedFile) {
-      console.log("Enviando arquivo:", selectedFile.name);
       toast.success("Comprovante enviado com sucesso!");
       setSelectedFile(null);
     } else {
-      console.log("Nenhum arquivo selecionado");
       toast.error("Por favor, selecione um arquivo");
     }
   };
