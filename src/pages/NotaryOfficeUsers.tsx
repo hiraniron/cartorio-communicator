@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Loader2 } from "lucide-react";
 import { UserRegistrationForm } from "@/components/notary-registration/UserRegistrationForm";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ import { toast } from "sonner";
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
 
-  const { data: users } = useQuery({
+  const { data: users, isLoading } = useQuery({
     queryKey: ["users", id],
     queryFn: async () => {
       if (!id) return [];
@@ -27,8 +27,14 @@ export default function NotaryOfficeUsers() {
         .from("profiles")
         .select("*")
         .eq("notary_office_id", id);
-      if (error) throw error;
-      return data;
+
+      if (error) {
+        console.error("Error fetching users:", error);
+        toast.error("Erro ao carregar usuários");
+        throw error;
+      }
+
+      return data || [];
     },
     enabled: !!id,
   });
@@ -41,10 +47,22 @@ export default function NotaryOfficeUsers() {
       });
       if (authError) throw authError;
 
+      // Create profile for the new user
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: data.id,
+          full_name: data.fullName,
+          notary_office_id: id,
+          role: "staff"
+        });
+
+      if (profileError) throw profileError;
+
       toast.success("Usuário cadastrado com sucesso!");
     } catch (error) {
+      console.error("Error adding user:", error);
       toast.error("Erro ao cadastrar usuário");
-      console.error(error);
     }
   };
 
@@ -77,12 +95,29 @@ export default function NotaryOfficeUsers() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.full_name}</TableCell>
-                <TableCell>{user.role}</TableCell>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={2} className="text-center py-8">
+                  <div className="flex items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                    Carregando usuários...
+                  </div>
+                </TableCell>
               </TableRow>
-            ))}
+            ) : users && users.length > 0 ? (
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.full_name}</TableCell>
+                  <TableCell className="capitalize">{user.role}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">
+                  Nenhum usuário cadastrado
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Card>
