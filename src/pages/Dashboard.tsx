@@ -18,7 +18,7 @@ const Dashboard = () => {
       const { data, error } = await supabase
         .from('communication_types')
         .select('*')
-        .contains('selected_months', [month]);
+        .contains('selected_months', [month?.toString()]);
       
       if (error) {
         console.error('Error fetching communications:', error);
