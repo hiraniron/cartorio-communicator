@@ -4,28 +4,29 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Calendar, Clock, Paperclip, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
-
-const communications = [
-  {
-    id: 1,
-    title: "SIRC - INSS e PFB",
-    deadline: "2024-03-01",
-    status: "pending",
-    description: "Registro dos óbitos ocorridos no dia útil imediatamente anterior",
-  },
-  {
-    id: 2,
-    title: "FECOM",
-    deadline: "2024-03-05",
-    status: "completed",
-    description: "Atos gratuitos e relatório de emolumentos para fins de renda mínima",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const Dashboard = () => {
   console.log("Dashboard component rendered");
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { data: communications = [], isLoading } = useQuery({
+    queryKey: ['communications'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('communication_types')
+        .select('*');
+      
+      if (error) {
+        console.error('Error fetching communications:', error);
+        toast.error('Erro ao carregar comunicações');
+        return [];
+      }
+
+      return data || [];
+    }
+  });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Tentando fazer upload de arquivo");
@@ -49,6 +50,10 @@ const Dashboard = () => {
     }
   };
 
+  const pendingCount = communications.filter(comm => comm.status === "pending").length;
+  const totalCount = communications.length;
+  const onTimeCount = totalCount - pendingCount;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
@@ -65,7 +70,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="font-medium">Pendentes</h3>
-                <p className="text-2xl font-bold">3</p>
+                <p className="text-2xl font-bold">{pendingCount}</p>
               </div>
             </div>
           </Card>
@@ -77,7 +82,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="font-medium">No Prazo</h3>
-                <p className="text-2xl font-bold">12</p>
+                <p className="text-2xl font-bold">{onTimeCount}</p>
               </div>
             </div>
           </Card>
@@ -89,7 +94,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="font-medium">Total</h3>
-                <p className="text-2xl font-bold">15</p>
+                <p className="text-2xl font-bold">{totalCount}</p>
               </div>
             </div>
           </Card>
@@ -98,49 +103,56 @@ const Dashboard = () => {
         <div className="space-y-6">
           <h2 className="text-2xl font-display font-semibold">Comunicações</h2>
           
-          <div className="grid gap-6">
-            {communications.map((comm) => (
-              <Card key={comm.id} className="glass-card p-6 space-y-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span className="text-sm font-medium text-gray-500">
-                      {comm.status === "pending" ? (
+          {isLoading ? (
+            <p>Carregando comunicações...</p>
+          ) : communications.length === 0 ? (
+            <Card className="glass-card p-6">
+              <p className="text-center text-gray-500">Nenhuma comunicação cadastrada</p>
+            </Card>
+          ) : (
+            <div className="grid gap-6">
+              {communications.map((comm) => (
+                <Card key={comm.id} className="glass-card p-6 space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-sm font-medium text-gray-500">
                         <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
                           Pendente
                         </span>
-                      ) : (
-                        <span className="text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                          Concluído
-                        </span>
-                      )}
-                    </span>
-                    <h3 className="text-xl font-semibold mt-2">{comm.title}</h3>
-                    <p className="text-gray-500 mt-1">{comm.description}</p>
+                      </span>
+                      <h3 className="text-xl font-semibold mt-2">{comm.name}</h3>
+                      <p className="text-gray-500 mt-1">{comm.description}</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        <strong>O que informar:</strong> {comm.what_to_inform}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-500">Prazo</p>
+                      <p className="font-medium">
+                        {comm.deadlines.join(", ")} de cada mês
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Prazo</p>
-                    <p className="font-medium">{new Date(comm.deadline).toLocaleDateString()}</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center space-x-4">
-                  <Input
-                    type="file"
-                    onChange={handleFileUpload}
-                    className="flex-1"
-                    accept=".pdf,.doc,.docx"
-                  />
-                  <Button
-                    onClick={() => handleSubmit(comm.id)}
-                    className="hover-scale"
-                  >
-                    <Paperclip className="w-4 h-4 mr-2" />
-                    Anexar
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
+                  <div className="flex items-center space-x-4">
+                    <Input
+                      type="file"
+                      onChange={handleFileUpload}
+                      className="flex-1"
+                      accept=".pdf,.doc,.docx"
+                    />
+                    <Button
+                      onClick={() => handleSubmit(comm.id)}
+                      className="hover-scale"
+                    >
+                      <Paperclip className="w-4 h-4 mr-2" />
+                      Anexar
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
