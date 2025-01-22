@@ -61,6 +61,16 @@ export const MonthlyOverview = ({
     }
   };
 
+  const handleMonthClick = (month: number) => {
+    // Se o mês já está selecionado, desseleciona
+    if (selectedMonth === month) {
+      onMonthSelect(-1); // Ou null, dependendo da sua implementação
+    } else {
+      // Caso contrário, seleciona o novo mês
+      onMonthSelect(month);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {months.map(({ month, name }) => {
@@ -78,7 +88,7 @@ export const MonthlyOverview = ({
               ${isSelected ? 'ring-2 ring-primary ring-offset-2 scale-[1.02] shadow-lg' : ''}
               ${statusColor}
             `}
-            onClick={() => onMonthSelect(month)}
+            onClick={() => handleMonthClick(month)}
           >
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
