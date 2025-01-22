@@ -6,6 +6,8 @@ import { DescriptionInput } from "./form/DescriptionInput";
 import { WhatToInformInput } from "./form/WhatToInformInput";
 import { DeadlinesInput } from "./form/DeadlinesInput";
 import { useCommunicationTypeForm } from "@/hooks/useCommunicationTypeForm";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import type { CommunicationType } from "@/types/communication";
 
 interface CommunicationTypeFormProps {
@@ -21,6 +23,7 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
       whatToInform,
       deadlines,
       selectedMonths,
+      requiresPdf,
     },
     formHandlers: {
       setName,
@@ -31,6 +34,7 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
       addDeadline,
       removeDeadline,
       updateDeadline,
+      setRequiresPdf,
     },
     handleSubmit,
   } = useCommunicationTypeForm(initialData);
@@ -66,6 +70,15 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
           selectedMonths={selectedMonths} 
           setSelectedMonths={setSelectedMonths} 
         />
+
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="requires-pdf"
+            checked={requiresPdf}
+            onCheckedChange={setRequiresPdf}
+          />
+          <Label htmlFor="requires-pdf">Gerar ofício em PDF</Label>
+        </div>
 
         <Button type="submit" className="w-full">
           {initialData ? "Atualizar" : "Cadastrar"}

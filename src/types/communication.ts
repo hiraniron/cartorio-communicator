@@ -8,4 +8,5 @@ export interface CommunicationType {
   selected_months: string[];
   created_at?: string;
   updated_at?: string;
+  requires_pdf?: boolean;
 }
