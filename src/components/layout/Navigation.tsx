@@ -25,6 +25,15 @@ export const Navigation = () => {
             Início
           </Button>
         </Link>
+        <Link to="/registered-communications">
+          <Button 
+            variant={isActive("/registered-communications") ? "default" : "ghost"}
+            className="gap-2"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Comunicações
+          </Button>
+        </Link>
         <Link to="/communication-types">
           <Button 
             variant={isActive("/communication-types") ? "default" : "ghost"}
@@ -40,8 +49,7 @@ export const Navigation = () => {
             <Button 
               variant={
                 isActive("/notary-registration") || 
-                isActive("/notary-offices") ||
-                isActive("/registered-communications")
+                isActive("/notary-offices") 
                   ? "default" 
                   : "ghost"
               }
@@ -52,12 +60,6 @@ export const Navigation = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <Link to="/registered-communications">
-              <DropdownMenuItem>
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Comunicações
-              </DropdownMenuItem>
-            </Link>
             <Link to="/notary-registration">
               <DropdownMenuItem>
                 <Building2 className="h-4 w-4 mr-2" />

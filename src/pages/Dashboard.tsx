@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Link } from "react-router-dom";
 import type { CommunicationType } from "@/types/communication";
 
 const Dashboard = () => {
@@ -74,15 +75,15 @@ const Dashboard = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+              <BreadcrumbLink as={Link} to="/">
                 Início
-              </Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <Link to="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+              <BreadcrumbLink as={Link} to="/dashboard">
                 Dashboard
-              </Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
