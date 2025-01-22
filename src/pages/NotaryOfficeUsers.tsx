@@ -10,6 +10,7 @@ import {
 import { UsersList } from "@/components/notary-users/UsersList";
 import { UserManagementSheet } from "@/components/notary-users/UserManagementSheet";
 import { useNotaryUsers } from "@/hooks/useNotaryUsers";
+import { User } from "@/types/user";
 
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
@@ -24,11 +25,6 @@ export default function NotaryOfficeUsers() {
     handleEditUser,
     handleDeleteUser,
   } = useNotaryUsers(id);
-
-  const formattedUsers = users?.map(user => ({
-    ...user,
-    email: user.email || '', // Add email property
-  }));
 
   return (
     <div className="container mx-auto py-6">
@@ -57,9 +53,9 @@ export default function NotaryOfficeUsers() {
           </TableHeader>
           <TableBody>
             <UsersList
-              users={formattedUsers}
+              users={users}
               isLoading={isLoading}
-              onEdit={(user) => {
+              onEdit={(user: User) => {
                 setEditingUser(user);
                 setIsSheetOpen(true);
               }}

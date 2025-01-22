@@ -9,13 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-
-interface User {
-  id: string;
-  full_name: string;
-  role: string;
-  email: string;
-}
+import { User } from "@/types/user";
 
 interface UsersListProps {
   users: User[] | null;

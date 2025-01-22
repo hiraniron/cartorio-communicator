@@ -2,13 +2,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-
-interface UserWithEmail extends Database['public']['Tables']['profiles']['Row'] {
-  email?: string;
-}
+import { User, UserFormData } from "@/types/user";
 
 export function useNotaryUsers(notaryOfficeId: string | undefined) {
-  const [editingUser, setEditingUser] = useState<UserWithEmail | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const { data: users, isLoading, error, refetch } = useQuery({
@@ -35,18 +32,18 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
       })) || [];
 
       console.log("Fetched users:", transformedData);
-      return transformedData as UserWithEmail[];
+      return transformedData as User[];
     },
     enabled: !!notaryOfficeId,
     retry: 1,
     refetchOnWindowFocus: false
   });
 
-  const handleAddUser = async (data: any) => {
+  const handleAddUser = async (data: UserFormData) => {
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
-        password: data.password,
+        password: data.password!,
       });
 
       if (authError) throw authError;
@@ -77,7 +74,9 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
     }
   };
 
-  const handleEditUser = async (data: any) => {
+  const handleEditUser = async (data: UserFormData) => {
+    if (!editingUser) return;
+    
     try {
       const { error: profileError } = await supabase
         .from("profiles")
