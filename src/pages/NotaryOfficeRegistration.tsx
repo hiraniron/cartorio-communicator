@@ -64,7 +64,7 @@ const NotaryOfficeRegistration = () => {
 
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
-        password: values.password,
+        password: values.password!,
       });
 
       if (authError) throw authError;
@@ -74,6 +74,7 @@ const NotaryOfficeRegistration = () => {
         notary_office_id: notaryOfficeId,
         full_name: values.fullName,
         role: values.role,
+        email: values.email // Adicionando o campo email
       });
 
       if (profileError) throw profileError;

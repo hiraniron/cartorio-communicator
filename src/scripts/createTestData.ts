@@ -33,7 +33,8 @@ async function createTestData() {
         id: auth.user!.id,
         full_name: 'Usuário Teste',
         notary_office_id: notaryOffice.id,
-        role: 'staff'
+        role: 'staff',
+        email: 'teste@cartorio.com' // Adicionando o campo email
       })
       .select()
       .single();
