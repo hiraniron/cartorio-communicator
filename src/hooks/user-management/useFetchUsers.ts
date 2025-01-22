@@ -11,7 +11,7 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
       
       console.log("Fetching users for notary office:", notaryOfficeId);
       
-      // Get all profiles with their auth data for the notary office
+      // Get all profiles for the notary office
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select(`
@@ -19,9 +19,8 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
           full_name,
           role,
           notary_office_id,
-          auth_users:id (
-            email
-          )
+          created_at,
+          updated_at
         `)
         .eq('notary_office_id', notaryOfficeId);
 
@@ -31,24 +30,29 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
         throw profilesError;
       }
 
-      // Transform the data to match the User type
-      const transformedData = profiles
-        .filter((profile): profile is (typeof profile & { auth_users: { email: string } }) => {
-          if (!profile.auth_users?.email) {
-            console.warn(`User ${profile.id} has no email address`);
-            return false;
-          }
-          return true;
-        })
-        .map(profile => ({
+      // Get auth data for these profiles
+      const { data: authData, error: authError } = await supabase
+        .auth.admin.listUsers();
+
+      if (authError) {
+        console.error("Error fetching auth users:", authError);
+        toast.error("Erro ao carregar dados de autenticação");
+        throw authError;
+      }
+
+      // Map auth data to profiles
+      const transformedData = profiles.map(profile => {
+        const authUser = authData.users.find(user => user.id === profile.id);
+        return {
           id: profile.id,
           full_name: profile.full_name,
           role: profile.role,
-          email: profile.auth_users.email,
+          email: authUser?.email || '',
           notary_office_id: profile.notary_office_id,
           created_at: profile.created_at,
           updated_at: profile.updated_at
-        }));
+        };
+      });
 
       console.log("Fetched users:", transformedData);
       return transformedData;
