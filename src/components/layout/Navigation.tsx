@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, FileText, Building2, MessageSquare, Settings2 } from "lucide-react";
+import { Home, FileText, Building2, MessageSquare, Settings2, BarChart } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,15 @@ export const Navigation = () => {
           >
             <MessageSquare className="h-4 w-4" />
             Comunicações
+          </Button>
+        </Link>
+        <Link to="/monthly-report">
+          <Button 
+            variant={isActive("/monthly-report") ? "default" : "ghost"}
+            className="gap-2"
+          >
+            <BarChart className="h-4 w-4" />
+            Relatório Mensal
           </Button>
         </Link>
 

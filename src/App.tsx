@@ -13,6 +13,7 @@ import RegisteredCommunications from "@/pages/RegisteredCommunications";
 import CommunicationTypes from "@/pages/CommunicationTypes";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/Dashboard";
+import MonthlyReport from "@/pages/MonthlyReport";
 import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
 
 // Create a client
@@ -43,6 +44,7 @@ function App() {
                         path="/registered-communications"
                         element={<RegisteredCommunications />}
                       />
+                      <Route path="/monthly-report" element={<MonthlyReport />} />
                     </Routes>
                   </div>
                 </>
