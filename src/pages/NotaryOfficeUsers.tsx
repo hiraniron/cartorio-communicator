@@ -11,6 +11,16 @@ import { UsersList } from "@/components/notary-users/UsersList";
 import { UserManagementSheet } from "@/components/notary-users/UserManagementSheet";
 import { useNotaryUsers } from "@/hooks/useNotaryUsers";
 
+interface User {
+  id: string;
+  full_name: string;
+  email: string;
+  role: "admin" | "staff";
+  notary_office_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
   const {
@@ -52,7 +62,7 @@ export default function NotaryOfficeUsers() {
           </TableHeader>
           <TableBody>
             <UsersList
-              users={users}
+              users={users as User[]}
               isLoading={isLoading}
               onEdit={(user) => {
                 setEditingUser(user);
