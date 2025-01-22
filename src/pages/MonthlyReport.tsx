@@ -47,11 +47,37 @@ const MonthlyReport = () => {
       })
     : [];
 
-  const stats = {
-    onTime: filteredSubmissions.filter(s => s.status === 'on_time').length,
-    late: filteredSubmissions.filter(s => s.status === 'late').length,
-    pending: filteredSubmissions.filter(s => s.status === 'pending').length,
-    total: filteredSubmissions.length,
+  const calculateStats = () => {
+    if (!selectedMonth) return { onTime: 0, late: 0, pending: 0, total: 0 };
+
+    const currentDate = new Date();
+    const monthStart = new Date(selectedYear, selectedMonth, 1);
+    const monthEnd = new Date(selectedYear, selectedMonth + 1, 0);
+
+    // If the selected month is in the future, return zeros
+    if (monthStart > currentDate) {
+      return { onTime: 0, late: 0, pending: 0, total: 0 };
+    }
+
+    const stats = {
+      onTime: filteredSubmissions.filter(s => s.status === 'on_time').length,
+      late: filteredSubmissions.filter(s => s.status === 'late').length,
+      pending: filteredSubmissions.filter(s => s.status === 'pending').length,
+      total: filteredSubmissions.length
+    };
+
+    // If we're looking at the current month, we only count submissions up to today
+    if (monthStart.getMonth() === currentDate.getMonth() && 
+        monthStart.getFullYear() === currentDate.getFullYear()) {
+      return stats;
+    }
+
+    // For past months, if there are no submissions or incomplete submissions, count them as pending
+    if (monthEnd < currentDate && stats.total === 0) {
+      return { ...stats, pending: 1, total: 1 };
+    }
+
+    return stats;
   };
 
   if (isLoading) {
@@ -61,6 +87,8 @@ const MonthlyReport = () => {
       </div>
     );
   }
+
+  const stats = calculateStats();
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 p-6">
