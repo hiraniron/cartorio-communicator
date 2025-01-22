@@ -53,6 +53,12 @@ export const Navigation = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <Link to="/communication-types">
+              <DropdownMenuItem>
+                <FileText className="h-4 w-4 mr-2" />
+                Cadastro de Comunicações
+              </DropdownMenuItem>
+            </Link>
             <Link to="/registered-communications">
               <DropdownMenuItem>
                 <MessageSquare className="h-4 w-4 mr-2" />
@@ -69,12 +75,6 @@ export const Navigation = () => {
               <DropdownMenuItem>
                 <Building2 className="h-4 w-4 mr-2" />
                 Listar Cartórios
-              </DropdownMenuItem>
-            </Link>
-            <Link to="/communication-types">
-              <DropdownMenuItem>
-                <FileText className="h-4 w-4 mr-2" />
-                Cadastro de Comunicações
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>
