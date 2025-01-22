@@ -2,6 +2,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { UserFormData } from "@/types/user";
 
+const RATE_LIMIT_ERROR = "over_email_send_rate_limit";
+const DB_ERROR = "unexpected_failure";
+
 export function useUserMutations(notaryOfficeId: string | undefined, onSuccess: () => void) {
   const handleAddUser = async (data: UserFormData) => {
     try {
@@ -10,7 +13,16 @@ export function useUserMutations(notaryOfficeId: string | undefined, onSuccess: 
         password: data.password!,
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        if (authError.message.includes(RATE_LIMIT_ERROR)) {
+          throw new Error("Por favor, aguarde alguns segundos antes de tentar novamente");
+        }
+        if (authError.message.includes(DB_ERROR)) {
+          throw new Error("Erro ao criar usuário. Por favor, tente novamente");
+        }
+        throw authError;
+      }
+
       if (!authData.user) throw new Error("No user data returned");
 
       console.log("Created auth user:", authData.user);
@@ -31,9 +43,9 @@ export function useUserMutations(notaryOfficeId: string | undefined, onSuccess: 
 
       toast.success("Usuário cadastrado com sucesso!");
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding user:", error);
-      toast.error("Erro ao cadastrar usuário");
+      toast.error(error.message || "Erro ao cadastrar usuário");
     }
   };
 

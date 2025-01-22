@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@/types/user";
-import { Database } from "@/integrations/supabase/types";
 
 type ProfileWithAuth = {
   id: string;
@@ -11,9 +10,7 @@ type ProfileWithAuth = {
   notary_office_id: string | null;
   created_at: string;
   updated_at: string;
-  auth_user: {
-    email: string;
-  };
+  email?: string;
 };
 
 export function useFetchUsers(notaryOfficeId: string | undefined) {
@@ -23,33 +20,49 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
       if (!notaryOfficeId) return [];
       
       console.log("Fetching users for notary office:", notaryOfficeId);
-      const { data, error } = await supabase
+      
+      // First, get all profiles for the notary office
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          auth_user:users!profiles_id_fkey(email)
-        `)
-        .eq("notary_office_id", notaryOfficeId);
+        .select('*')
+        .eq('notary_office_id', notaryOfficeId);
 
-      if (error) {
-        console.error("Error fetching users:", error);
+      if (profilesError) {
+        console.error("Error fetching profiles:", profilesError);
         toast.error("Erro ao carregar usuários");
-        throw error;
+        throw profilesError;
       }
 
-      // Transform the data to include email at the top level
-      const transformedData = (data as unknown as ProfileWithAuth[])
-        .filter(profile => {
-          if (!profile.auth_user?.email) {
-            console.warn(`User ${profile.id} has no email address`);
+      // Then, get the email addresses for these profiles
+      const userEmails = await Promise.all(
+        profiles.map(async (profile) => {
+          const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('email')
+            .eq('id', profile.id)
+            .single();
+
+          if (userError) {
+            console.warn(`Could not fetch email for user ${profile.id}:`, userError);
+            return null;
+          }
+
+          return {
+            ...profile,
+            email: userData?.email
+          };
+        })
+      );
+
+      // Filter out any profiles where we couldn't get the email
+      const transformedData = userEmails
+        .filter((profile): profile is ProfileWithAuth => {
+          if (!profile?.email) {
+            console.warn(`User ${profile?.id} has no email address`);
             return false;
           }
           return true;
-        })
-        .map(profile => ({
-          ...profile,
-          email: profile.auth_user.email
-        }));
+        });
 
       console.log("Fetched users:", transformedData);
       return transformedData;
