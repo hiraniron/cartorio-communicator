@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertOctagon, Clock, XOctagon, Calendar } from "lucide-react";
+import { AlertOctagon, Clock, XOctagon, Boxes } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StatsOverviewProps {
@@ -65,7 +65,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
       <Card className="p-6 bg-white/50 backdrop-blur-sm shadow-sm">
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-full bg-blue-50">
-            <Calendar className="w-6 h-6 text-blue-600" />
+            <Boxes className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <p className="text-sm text-black">Total</p>
