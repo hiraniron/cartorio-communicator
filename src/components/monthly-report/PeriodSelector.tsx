@@ -16,7 +16,7 @@ export const PeriodSelector = ({
   );
 
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-full max-w-xs mx-auto">
       <label className="text-sm font-medium">Ano</label>
       <Select
         value={selectedYear.toString()}
