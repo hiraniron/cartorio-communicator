@@ -12,8 +12,8 @@ export const StatsOverview = ({ pendingCount }: StatsOverviewProps) => {
         icon={XCircle}
         title="Pendentes"
         value={pendingCount}
-        iconClassName="text-primary"
-        iconContainerClassName="bg-primary/10"
+        iconClassName="text-red-600"
+        iconContainerClassName="bg-red-100"
       />
       <StatCard
         icon={Clock}
@@ -26,8 +26,8 @@ export const StatsOverview = ({ pendingCount }: StatsOverviewProps) => {
         icon={AlertCircle}
         title="Atrasadas"
         value={pendingCount}
-        iconClassName="text-red-600"
-        iconContainerClassName="bg-red-100"
+        iconClassName="text-primary"
+        iconContainerClassName="bg-primary/10"
       />
       <StatCard
         icon={Calendar}
