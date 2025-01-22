@@ -21,7 +21,6 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
   const {
     formState: {
       name,
-      customName,
       description,
       whatToInform,
       deadlines,
@@ -31,7 +30,6 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
     },
     formHandlers: {
       setName,
-      setCustomName,
       setDescription,
       setWhatToInform,
       setSelectedMonths,
@@ -56,9 +54,7 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
       <form onSubmit={handleSubmit} className="space-y-6">
         <CommunicationNameSelect
           name={name}
-          customName={customName}
           onNameChange={setName}
-          onCustomNameChange={setCustomName}
         />
 
         <DescriptionInput
