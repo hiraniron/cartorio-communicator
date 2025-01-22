@@ -9,12 +9,6 @@ export const PageHeader = () => {
         <h1 className="text-4xl font-display font-bold">Comunicações Cadastradas</h1>
         <p className="text-gray-500">Gerencie suas comunicações cadastradas</p>
       </div>
-      <Link to="/communication-types">
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Nova Comunicação
-        </Button>
-      </Link>
     </header>
   );
 };
