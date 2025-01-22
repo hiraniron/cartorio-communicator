@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, FileText, Building2, MessageSquare, Settings2, BarChart } from "lucide-react";
+import { Home, FileText, Building2, MessageSquare, Settings2, BarChart, ArrowRight } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,17 @@ export const Navigation = () => {
             Início
           </Button>
         </Link>
+
+        <Link to="/dashboard">
+          <Button 
+            variant={isActive("/dashboard") ? "default" : "ghost"}
+            className="gap-2 hover:bg-[#1EAEDB] hover:text-white hover-scale"
+          >
+            <ArrowRight className="h-4 w-4" />
+            Iniciar Comunicações
+          </Button>
+        </Link>
+
         <Link to="/monthly-report">
           <Button 
             variant={isActive("/monthly-report") ? "default" : "ghost"}
