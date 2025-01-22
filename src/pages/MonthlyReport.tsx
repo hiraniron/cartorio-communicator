@@ -5,6 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { PeriodSelector } from "@/components/monthly-report/PeriodSelector";
 import { MonthlyOverview } from "@/components/monthly-report/MonthlyOverview";
 import { SubmissionsTable } from "@/components/monthly-report/SubmissionsTable";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const MonthlyReport = () => {
   const currentDate = new Date();
@@ -73,8 +75,13 @@ const MonthlyReport = () => {
         />
 
         {selectedMonth !== null && (
-          <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
-            <SubmissionsTable submissions={filteredSubmissions} />
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">
+              {format(new Date(selectedYear, selectedMonth), "MMMM 'de' yyyy", { locale: ptBR })}
+            </h2>
+            <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
+              <SubmissionsTable submissions={filteredSubmissions} />
+            </div>
           </div>
         )}
       </div>
