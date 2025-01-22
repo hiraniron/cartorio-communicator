@@ -2,7 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Paperclip } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import type { CommunicationType } from "@/types/communication";
+import { useState } from "react";
 
 interface CommunicationCardProps {
   communication: CommunicationType;
@@ -15,6 +18,91 @@ export const CommunicationCard = ({
   onFileUpload,
   onSubmit,
 }: CommunicationCardProps) => {
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleSubmit = async () => {
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const files = fileInput?.files;
+
+    if (!files || files.length === 0) {
+      toast.error("Por favor, selecione pelo menos um arquivo");
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const filePaths: string[] = [];
+      
+      // Upload each file to Supabase Storage
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${crypto.randomUUID()}.${fileExt}`;
+        const filePath = `${comm.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('communication_files')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        filePaths.push(filePath);
+      }
+
+      // Get current date to compare with deadline
+      const currentDate = new Date();
+      const deadlineDay = Math.max(...comm.deadlines);
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+      const deadlineDate = new Date(currentYear, currentMonth - 1, deadlineDay);
+
+      // Determine status based on submission date vs deadline
+      const status = currentDate <= deadlineDate ? 'on_time' : 'late';
+
+      // Get user's profile and notary office
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, notary_office_id')
+        .eq('id', (await supabase.auth.getUser()).data.user?.id)
+        .single();
+
+      if (!profile) {
+        throw new Error("Perfil não encontrado");
+      }
+
+      // Create submission record
+      const { error: submissionError } = await supabase
+        .from('communication_submissions')
+        .insert({
+          communication_type_id: comm.id,
+          profile_id: profile.id,
+          notary_office_id: profile.notary_office_id,
+          status,
+          file_paths: filePaths,
+          original_deadline: deadlineDate.toISOString(),
+          submission_date: new Date().toISOString(),
+        });
+
+      if (submissionError) {
+        throw submissionError;
+      }
+
+      toast.success("Arquivos enviados com sucesso!");
+      onSubmit(comm.id);
+      
+      // Clear the file input
+      fileInput.value = '';
+
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast.error("Erro ao enviar arquivos");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Card className="glass-card p-6 space-y-4">
       <div className="flex justify-between items-start">
@@ -48,11 +136,12 @@ export const CommunicationCard = ({
             multiple
           />
           <Button
-            onClick={() => onSubmit(comm.id)}
+            onClick={handleSubmit}
             className="hover-scale"
+            disabled={isUploading}
           >
             <Paperclip className="w-4 h-4 mr-2" />
-            Enviar
+            {isUploading ? "Enviando..." : "Enviar"}
           </Button>
         </div>
       </div>

@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           communication_type_id: string
           created_at: string
+          file_paths: string[] | null
           id: string
           notary_office_id: string
           original_deadline: string
@@ -24,6 +25,7 @@ export type Database = {
         Insert: {
           communication_type_id: string
           created_at?: string
+          file_paths?: string[] | null
           id?: string
           notary_office_id: string
           original_deadline: string
@@ -35,6 +37,7 @@ export type Database = {
         Update: {
           communication_type_id?: string
           created_at?: string
+          file_paths?: string[] | null
           id?: string
           notary_office_id?: string
           original_deadline?: string
