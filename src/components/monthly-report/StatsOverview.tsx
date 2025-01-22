@@ -18,7 +18,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
         className={cn(
           "p-6 backdrop-blur-sm shadow-sm transition-all duration-300",
           stats.pending > 0 
-            ? "bg-red-50/50 ring-2 ring-red-500 animate-pulse" 
+            ? "bg-red-50/50 ring-2 ring-red-500 [animation:pulse_4s_ease-in-out_infinite]" 
             : "bg-white/50"
         )}
       >
