@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Home, BarChart, Calendar } from "lucide-react";
+import { Home, BarChart, Send } from "lucide-react";
 import { NavButton } from "./navigation/NavButton";
 import { AdminDropdownMenu } from "./navigation/AdminDropdownMenu";
 import { LogoutButton } from "./navigation/LogoutButton";
@@ -30,7 +30,7 @@ export const Navigation = () => {
           />
           <NavButton 
             to="/dashboard"
-            icon={Calendar}
+            icon={Send}
             label="Comunicações"
             isActive={isActive("/dashboard")}
           />
