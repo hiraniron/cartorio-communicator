@@ -77,6 +77,11 @@ const MonthlyReport = () => {
     pending: submissions.filter(s => s.status === 'pending').length,
   };
 
+  const handlePeriodChange = (year: string, month: string) => {
+    const newDate = new Date(parseInt(year), parseInt(month) - 1);
+    setSelectedDate(newDate);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -86,8 +91,10 @@ const MonthlyReport = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold">Relatório Mensal</h1>
+      
+      <PeriodSelector onPeriodChange={handlePeriodChange} />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 flex items-center space-x-4">
