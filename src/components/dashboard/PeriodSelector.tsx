@@ -37,7 +37,7 @@ export const PeriodSelector = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+    <div className="p-6 flex items-center justify-center">
       <Card className="w-full max-w-md p-6 space-y-6 glass-card">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-display font-semibold">Selecione o Período</h1>
