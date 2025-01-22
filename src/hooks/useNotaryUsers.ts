@@ -28,14 +28,21 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
         throw error;
       }
 
-      // Transform the data to include email at the top level
-      const transformedData = data?.map(profile => ({
-        ...profile,
-        email: (profile as any).auth_user?.email
-      })) || [];
+      // Transform the data to include email at the top level and ensure it's always present
+      const transformedData = data?.map(profile => {
+        const email = (profile as any).auth_user?.email;
+        if (!email) {
+          console.warn(`User ${profile.id} has no email address`);
+          return null;
+        }
+        return {
+          ...profile,
+          email
+        };
+      }).filter((user): user is User => user !== null) || [];
 
       console.log("Fetched users:", transformedData);
-      return transformedData as User[];
+      return transformedData;
     },
     enabled: !!notaryOfficeId,
     retry: 1,

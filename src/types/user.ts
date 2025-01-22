@@ -6,7 +6,7 @@ export interface User extends ProfileType {
   id: string;
   full_name: string;
   role: "admin" | "staff";
-  email?: string;
+  email: string; // Changed from email?: string to email: string
 }
 
 export type UserFormData = {
