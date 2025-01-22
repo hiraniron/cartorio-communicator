@@ -3,8 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+interface UserWithEmail extends Database['public']['Tables']['profiles']['Row'] {
+  email?: string;
+}
+
 export function useNotaryUsers(notaryOfficeId: string | undefined) {
-  const [editingUser, setEditingUser] = useState<any>(null);
+  const [editingUser, setEditingUser] = useState<UserWithEmail | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const { data: users, isLoading, error, refetch } = useQuery({
@@ -15,12 +19,7 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
       console.log("Fetching users for notary office:", notaryOfficeId);
       const { data, error } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          user:id (
-            email
-          )
-        `)
+        .select('*, auth_user:id(email)')
         .eq("notary_office_id", notaryOfficeId);
 
       if (error) {
@@ -32,11 +31,11 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
       // Transform the data to include email at the top level
       const transformedData = data?.map(profile => ({
         ...profile,
-        email: profile.user?.email
+        email: (profile as any).auth_user?.email
       })) || [];
 
       console.log("Fetched users:", transformedData);
-      return transformedData;
+      return transformedData as UserWithEmail[];
     },
     enabled: !!notaryOfficeId,
     retry: 1,
