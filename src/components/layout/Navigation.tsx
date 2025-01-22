@@ -34,22 +34,14 @@ export const Navigation = () => {
             Comunicações
           </Button>
         </Link>
-        <Link to="/communication-types">
-          <Button 
-            variant={isActive("/communication-types") ? "default" : "ghost"}
-            className="gap-2"
-          >
-            <FileText className="h-4 w-4" />
-            Tipos de Comunicação
-          </Button>
-        </Link>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
               variant={
                 isActive("/notary-registration") || 
-                isActive("/notary-offices") 
+                isActive("/notary-offices") ||
+                isActive("/communication-types")
                   ? "default" 
                   : "ghost"
               }
@@ -70,6 +62,12 @@ export const Navigation = () => {
               <DropdownMenuItem>
                 <Building2 className="h-4 w-4 mr-2" />
                 Listar Cartórios
+              </DropdownMenuItem>
+            </Link>
+            <Link to="/communication-types">
+              <DropdownMenuItem>
+                <FileText className="h-4 w-4 mr-2" />
+                Cadastro de Comunicações
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>
