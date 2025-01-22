@@ -3,24 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PeriodSelector } from "@/components/monthly-report/PeriodSelector";
-import { StatsOverview } from "@/components/monthly-report/StatsOverview";
+import { MonthlyOverview } from "@/components/monthly-report/MonthlyOverview";
 import { SubmissionsTable } from "@/components/monthly-report/SubmissionsTable";
 
 const MonthlyReport = () => {
   const currentDate = new Date();
-  const previousMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1;
-  const previousMonthYear = currentDate.getMonth() === 0 
-    ? currentDate.getFullYear() - 1 
-    : currentDate.getFullYear();
-
-  const [selectedMonth, setSelectedMonth] = useState(previousMonth);
-  const [selectedYear, setSelectedYear] = useState(previousMonthYear);
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
 
   const { data: submissions = [], isLoading } = useQuery({
-    queryKey: ['communication-submissions', selectedMonth, selectedYear],
+    queryKey: ['communication-submissions', selectedYear],
     queryFn: async () => {
-      const startOfMonth = new Date(selectedYear, selectedMonth, 1);
-      const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
+      const startOfYear = new Date(selectedYear, 0, 1);
+      const endOfYear = new Date(selectedYear, 11, 31, 23, 59, 59);
       
       const { data, error } = await supabase
         .from('communication_submissions')
@@ -29,8 +24,8 @@ const MonthlyReport = () => {
           communication_type:communication_types(name),
           profile:profiles(full_name)
         `)
-        .gte('submission_date', startOfMonth.toISOString())
-        .lte('submission_date', endOfMonth.toISOString());
+        .gte('submission_date', startOfYear.toISOString())
+        .lte('submission_date', endOfYear.toISOString());
 
       if (error) {
         console.error('Error fetching submissions:', error);
@@ -42,12 +37,12 @@ const MonthlyReport = () => {
     },
   });
 
-  const stats = {
-    onTime: submissions.filter(s => s.status === 'on_time').length,
-    late: submissions.filter(s => s.status === 'late').length,
-    pending: submissions.filter(s => s.status === 'pending').length,
-    total: submissions.length,
-  };
+  const filteredSubmissions = selectedMonth !== null
+    ? submissions.filter(submission => {
+        const submissionDate = new Date(submission.submission_date);
+        return submissionDate.getMonth() === selectedMonth;
+      })
+    : [];
 
   if (isLoading) {
     return (
@@ -61,19 +56,27 @@ const MonthlyReport = () => {
     <div className="max-w-7xl mx-auto space-y-8 p-6">
       <h1 className="text-3xl font-bold">Relatório Mensal</h1>
       
-      <div className="space-y-6">
+      <div className="space-y-8">
         <PeriodSelector
-          selectedMonth={selectedMonth}
           selectedYear={selectedYear}
-          onMonthChange={(value) => setSelectedMonth(parseInt(value))}
-          onYearChange={(value) => setSelectedYear(parseInt(value))}
+          onYearChange={(value) => {
+            setSelectedYear(parseInt(value));
+            setSelectedMonth(null);
+          }}
         />
 
-        <StatsOverview stats={stats} />
+        <MonthlyOverview
+          selectedYear={selectedYear}
+          submissions={submissions}
+          onMonthSelect={setSelectedMonth}
+          selectedMonth={selectedMonth}
+        />
 
-        <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
-          <SubmissionsTable submissions={submissions} />
-        </div>
+        {selectedMonth !== null && (
+          <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
+            <SubmissionsTable submissions={filteredSubmissions} />
+          </div>
+        )}
       </div>
     </div>
   );
