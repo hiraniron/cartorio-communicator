@@ -6,12 +6,14 @@ export const validateCommunicationTypeForm = ({
   whatToInform,
   deadlines,
   selectedMonths,
+  requiresPdf,
 }: {
   name: string;
   description: string;
   whatToInform: string;
   deadlines: string[];
   selectedMonths: Date[];
+  requiresPdf: boolean;
 }) => {
   if (!name || !description || !whatToInform || deadlines.some(d => !d) || selectedMonths.length === 0) {
     toast.error("Por favor, preencha todos os campos");
