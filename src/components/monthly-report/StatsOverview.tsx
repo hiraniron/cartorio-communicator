@@ -12,38 +12,46 @@ interface StatsOverviewProps {
 
 export const StatsOverview = ({ stats }: StatsOverviewProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <Card className="p-4 flex items-center space-x-4">
-        <CheckCircle className="h-8 w-8 text-green-500" />
-        <div>
-          <p className="text-sm text-gray-500">No Prazo</p>
-          <p className="text-2xl font-bold">{stats.onTime}</p>
+    <div className="grid grid-cols-4 gap-4 bg-black/90 p-4 rounded-lg">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-full bg-white/10">
+          <AlertCircle className="h-5 w-5 text-white" />
         </div>
-      </Card>
+        <div>
+          <p className="text-sm text-white/60">Pendentes</p>
+          <p className="text-xl font-bold text-white">{stats.pending}</p>
+        </div>
+      </div>
       
-      <Card className="p-4 flex items-center space-x-4">
-        <AlertCircle className="h-8 w-8 text-red-500" />
-        <div>
-          <p className="text-sm text-gray-500">Atrasadas</p>
-          <p className="text-2xl font-bold">{stats.late}</p>
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-full bg-green-500/20">
+          <Clock className="h-5 w-5 text-green-500" />
         </div>
-      </Card>
+        <div>
+          <p className="text-sm text-white/60">No Prazo</p>
+          <p className="text-xl font-bold text-white">{stats.onTime}</p>
+        </div>
+      </div>
       
-      <Card className="p-4 flex items-center space-x-4">
-        <Clock className="h-8 w-8 text-yellow-500" />
-        <div>
-          <p className="text-sm text-gray-500">Pendentes</p>
-          <p className="text-2xl font-bold">{stats.pending}</p>
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-full bg-red-500/20">
+          <AlertCircle className="h-5 w-5 text-red-500" />
         </div>
-      </Card>
+        <div>
+          <p className="text-sm text-white/60">Atrasadas</p>
+          <p className="text-xl font-bold text-white">{stats.late}</p>
+        </div>
+      </div>
 
-      <Card className="p-4 flex items-center space-x-4">
-        <Calendar className="h-8 w-8 text-blue-500" />
-        <div>
-          <p className="text-sm text-gray-500">Total</p>
-          <p className="text-2xl font-bold">{stats.total}</p>
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-full bg-blue-500/20">
+          <Calendar className="h-5 w-5 text-blue-500" />
         </div>
-      </Card>
+        <div>
+          <p className="text-sm text-white/60">Total</p>
+          <p className="text-xl font-bold text-white">{stats.total}</p>
+        </div>
+      </div>
     </div>
   );
 };
