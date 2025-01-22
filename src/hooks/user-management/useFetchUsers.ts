@@ -7,7 +7,7 @@ import { Database } from "@/integrations/supabase/types";
 type ProfileWithAuth = Database['public']['Tables']['profiles']['Row'] & {
   auth_user: {
     email: string;
-  };
+  } | null;
 };
 
 export function useFetchUsers(notaryOfficeId: string | undefined) {
@@ -19,12 +19,7 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
       console.log("Fetching users for notary office:", notaryOfficeId);
       const { data, error } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          auth_user:id(
-            email
-          )
-        `)
+        .select('*, auth_user:id(email)')
         .eq("notary_office_id", notaryOfficeId);
 
       if (error) {
@@ -33,11 +28,19 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
         throw error;
       }
 
-      // Transform the data to include email at the top level
-      const transformedData = (data as ProfileWithAuth[]).map(profile => ({
-        ...profile,
-        email: profile.auth_user.email
-      }));
+      // Transform the data to include email at the top level and ensure it's always present
+      const transformedData = (data as ProfileWithAuth[])
+        .filter((profile): profile is ProfileWithAuth => {
+          if (!profile.auth_user?.email) {
+            console.warn(`User ${profile.id} has no email address`);
+            return false;
+          }
+          return true;
+        })
+        .map(profile => ({
+          ...profile,
+          email: profile.auth_user.email
+        }));
 
       console.log("Fetched users:", transformedData);
       return transformedData;
