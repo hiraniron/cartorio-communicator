@@ -33,7 +33,8 @@ export function useUserMutations(notaryOfficeId: string | undefined, onSuccess: 
           id: authData.user.id,
           full_name: data.fullName,
           notary_office_id: notaryOfficeId,
-          role: data.role
+          role: data.role,
+          email: data.email
         });
 
       if (profileError) {
