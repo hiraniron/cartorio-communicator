@@ -14,7 +14,7 @@ export const NotaryOfficeTableRow = ({ notary, onEdit }: NotaryOfficeTableRowPro
     <TableRow key={notary.id}>
       <TableCell>{notary.name}</TableCell>
       <TableCell>{notary.city}</TableCell>
-      <TableCell>{notary.phone}</TableCell>
+      <TableCell>{notary.institutional_email}</TableCell>
       <TableCell className="space-x-2">
         <Button
           variant="outline"

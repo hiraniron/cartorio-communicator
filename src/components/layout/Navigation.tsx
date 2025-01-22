@@ -85,12 +85,6 @@ export const Navigation = () => {
                   Listar Cartórios
                 </DropdownMenuItem>
               </Link>
-              <Link to="/notary-registration">
-                <DropdownMenuItem>
-                  <Building2 className="h-4 w-4 mr-2" />
-                  Editar Cartório
-                </DropdownMenuItem>
-              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
