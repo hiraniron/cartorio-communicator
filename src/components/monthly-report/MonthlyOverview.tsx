@@ -36,27 +36,11 @@ export const MonthlyOverview = ({
     return monthSubmissions.every(submission => submission.status === 'on_time');
   };
 
-  const isMonthCompleted = (month: number) => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-
-    // Se o ano selecionado for menor que o atual, todos os meses estão completos
-    if (selectedYear < currentYear) return true;
-    
-    // Se o ano selecionado for maior que o atual, nenhum mês está completo
-    if (selectedYear > currentYear) return false;
-    
-    // Se estamos no ano atual, verifica se o mês já passou
-    return month < currentMonth;
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {months.map(({ month, name }) => {
         const isSelected = selectedMonth === month;
         const isOk = isMonthOk(month);
-        const completed = isMonthCompleted(month);
 
         return (
           <Button
@@ -77,12 +61,10 @@ export const MonthlyOverview = ({
               ) : (
                 <AlertCircle className="h-4 w-4 text-yellow-500" />
               )}
-              {!completed && (
-                isSelected ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )
+              {isSelected ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
               )}
             </div>
           </Button>
