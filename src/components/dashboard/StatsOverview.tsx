@@ -1,4 +1,4 @@
-import { AlertCircle, Calendar, Clock, XCircle } from "lucide-react";
+import { XCircle, Calendar, Clock, AlertCircle } from "lucide-react";
 import { StatCard } from "./StatCard";
 
 interface StatsOverviewProps {
@@ -9,7 +9,7 @@ export const StatsOverview = ({ pendingCount }: StatsOverviewProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard
-        icon={AlertCircle}
+        icon={XCircle}
         title="Pendentes"
         value={pendingCount}
         iconClassName="text-primary"
@@ -23,7 +23,7 @@ export const StatsOverview = ({ pendingCount }: StatsOverviewProps) => {
         iconContainerClassName="bg-green-100"
       />
       <StatCard
-        icon={XCircle}
+        icon={AlertCircle}
         title="Atrasadas"
         value={pendingCount}
         iconClassName="text-red-600"
