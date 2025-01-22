@@ -27,7 +27,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
             <AlertOctagon className="w-6 h-6 text-red-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">Pendentes</p>
+            <p className="text-sm text-black">Pendentes</p>
             <p className={cn(
               "text-2xl font-bold",
               stats.pending > 0 && "text-red-600"
@@ -44,7 +44,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
             <Clock className="w-6 h-6 text-green-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">No Prazo</p>
+            <p className="text-sm text-black">No Prazo</p>
             <p className="text-2xl font-bold">{stats.onTime}</p>
           </div>
         </div>
@@ -56,7 +56,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
             <XOctagon className="w-6 h-6 text-yellow-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">Enviadas após prazo</p>
+            <p className="text-sm text-black">Enviadas após prazo</p>
             <p className="text-2xl font-bold">{stats.late}</p>
           </div>
         </div>
@@ -68,7 +68,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
             <Calendar className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-600">Total</p>
+            <p className="text-sm text-black">Total</p>
             <p className="text-2xl font-bold">{stats.total}</p>
           </div>
         </div>
