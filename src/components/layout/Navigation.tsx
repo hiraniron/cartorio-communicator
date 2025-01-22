@@ -37,7 +37,7 @@ export const Navigation = () => {
           <NavButton 
             to="/monthly-report"
             icon={BarChart}
-            label="Relatório Mensal"
+            label="Relatórios"
             isActive={isActive("/monthly-report")}
           />
           <AdminDropdownMenu isActive={isAdminActive()} />
