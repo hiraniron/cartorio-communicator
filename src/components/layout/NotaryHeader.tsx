@@ -17,7 +17,7 @@ export const NotaryHeader = () => {
           )
         `)
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
       return profile;
     },
