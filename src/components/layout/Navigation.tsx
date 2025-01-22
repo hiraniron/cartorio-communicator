@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Home, BarChart } from "lucide-react";
+import { Home, BarChart, Calendar } from "lucide-react";
 import { NavButton } from "./navigation/NavButton";
 import { AdminDropdownMenu } from "./navigation/AdminDropdownMenu";
 import { LogoutButton } from "./navigation/LogoutButton";
@@ -27,6 +27,12 @@ export const Navigation = () => {
             icon={Home}
             label="Início"
             isActive={isActive("/")}
+          />
+          <NavButton 
+            to="/dashboard"
+            icon={Calendar}
+            label="Comunicações"
+            isActive={isActive("/dashboard")}
           />
           <NavButton 
             to="/monthly-report"
