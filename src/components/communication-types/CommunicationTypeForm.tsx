@@ -8,6 +8,8 @@ import { DeadlinesInput } from "./form/DeadlinesInput";
 import { useCommunicationTypeForm } from "@/hooks/useCommunicationTypeForm";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { PdfTemplateEditor } from "./PdfTemplateEditor";
 import type { CommunicationType } from "@/types/communication";
 
 interface CommunicationTypeFormProps {
@@ -15,6 +17,7 @@ interface CommunicationTypeFormProps {
 }
 
 export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProps) => {
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const {
     formState: {
       name,
@@ -24,6 +27,7 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
       deadlines,
       selectedMonths,
       requiresPdf,
+      pdfTemplate,
     },
     formHandlers: {
       setName,
@@ -35,9 +39,17 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
       removeDeadline,
       updateDeadline,
       setRequiresPdf,
+      setPdfTemplate,
     },
     handleSubmit,
   } = useCommunicationTypeForm(initialData);
+
+  const handleRequiresPdfChange = (checked: boolean) => {
+    setRequiresPdf(checked);
+    if (checked && !pdfTemplate) {
+      setIsEditorOpen(true);
+    }
+  };
 
   return (
     <Card className="p-6">
@@ -75,14 +87,31 @@ export const CommunicationTypeForm = ({ initialData }: CommunicationTypeFormProp
           <Switch
             id="requires-pdf"
             checked={requiresPdf}
-            onCheckedChange={setRequiresPdf}
+            onCheckedChange={handleRequiresPdfChange}
           />
           <Label htmlFor="requires-pdf">Gerar ofício em PDF</Label>
+          {requiresPdf && (
+            <Button
+              type="button"
+              variant="outline"
+              className="ml-4"
+              onClick={() => setIsEditorOpen(true)}
+            >
+              Editar template
+            </Button>
+          )}
         </div>
 
         <Button type="submit" className="w-full">
           {initialData ? "Atualizar" : "Cadastrar"}
         </Button>
+
+        <PdfTemplateEditor
+          isOpen={isEditorOpen}
+          onClose={() => setIsEditorOpen(false)}
+          onSave={setPdfTemplate}
+          initialContent={pdfTemplate}
+        />
       </form>
     </Card>
   );
