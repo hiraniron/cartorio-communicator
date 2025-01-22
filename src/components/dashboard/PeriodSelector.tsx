@@ -42,7 +42,7 @@ export const PeriodSelector = () => {
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-display font-semibold">Selecione o Período</h1>
           <p className="text-gray-500">
-            Escolha o mês e ano para visualizar as comunicações
+            Escolha o mês e o ano do envio das comunicações
           </p>
         </div>
 
