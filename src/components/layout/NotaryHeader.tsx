@@ -6,9 +6,11 @@ export const NotaryHeader = () => {
     queryKey: ["user-profile"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      console.log("Current user:", user);
+      
       if (!user) return null;
 
-      const { data: profile } = await supabase
+      const { data: profile, error } = await supabase
         .from("profiles")
         .select(`
           *,
@@ -19,11 +21,15 @@ export const NotaryHeader = () => {
         .eq("id", user.id)
         .maybeSingle();
 
+      console.log("User profile:", profile);
+      console.log("Profile fetch error:", error);
+
       return profile;
     },
   });
 
   if (!profile?.notary_office?.name) {
+    console.log("No notary office found for user");
     return null;
   }
 
