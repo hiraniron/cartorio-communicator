@@ -20,7 +20,7 @@ export const CommunicationCard = ({
       <div className="flex justify-between items-start">
         <div>
           <span className="text-sm font-medium text-gray-500">
-            <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
+            <span className="text-red-600 bg-red-100 px-2 py-1 rounded-full">
               Pendente
             </span>
           </span>
