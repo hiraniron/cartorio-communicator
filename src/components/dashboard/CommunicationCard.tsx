@@ -56,8 +56,7 @@ export const CommunicationCard = ({
           </Button>
         </div>
         <Button
-          variant="outline"
-          className="w-full"
+          className="w-full hover-scale"
           onClick={() => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
