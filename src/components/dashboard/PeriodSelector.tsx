@@ -15,10 +15,14 @@ const months = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
-export const PeriodSelector = () => {
+interface PeriodSelectorProps {
+  onPeriodSelected?: (month: string, year: string) => void;
+  showContinueButton?: boolean;
+}
+
+export const PeriodSelector = ({ onPeriodSelected, showContinueButton = true }: PeriodSelectorProps) => {
   const navigate = useNavigate();
   const currentDate = new Date();
-  // Get previous month (if current month is January, set to December and decrease year)
   const previousMonth = currentDate.getMonth() === 0 ? 12 : currentDate.getMonth();
   const previousMonthYear = currentDate.getMonth() === 0 
     ? currentDate.getFullYear() - 1 
@@ -33,16 +37,34 @@ export const PeriodSelector = () => {
   );
 
   const handleSubmit = () => {
-    navigate(`/dashboard/${selectedYear}/${selectedMonth}`);
+    if (onPeriodSelected) {
+      onPeriodSelected(selectedMonth, selectedYear);
+    } else {
+      navigate(`/dashboard/${selectedYear}/${selectedMonth}`);
+    }
+  };
+
+  const handleMonthChange = (value: string) => {
+    setSelectedMonth(value);
+    if (!showContinueButton && onPeriodSelected) {
+      onPeriodSelected(value, selectedYear);
+    }
+  };
+
+  const handleYearChange = (value: string) => {
+    setSelectedYear(value);
+    if (!showContinueButton && onPeriodSelected) {
+      onPeriodSelected(selectedMonth, value);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+    <div className="min-h-[50vh] flex items-center justify-center">
       <Card className="w-full max-w-md p-6 space-y-6 glass-card">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-display font-semibold">Selecione o Período</h1>
           <p className="text-gray-500">
-            Escolha o mês e o ano do envio das comunicações
+            Escolha o mês e o ano do relatório
           </p>
         </div>
 
@@ -51,7 +73,7 @@ export const PeriodSelector = () => {
             <label className="text-sm font-medium">Mês</label>
             <Select
               value={selectedMonth}
-              onValueChange={setSelectedMonth}
+              onValueChange={handleMonthChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o mês" />
@@ -70,7 +92,7 @@ export const PeriodSelector = () => {
             <label className="text-sm font-medium">Ano</label>
             <Select
               value={selectedYear}
-              onValueChange={setSelectedYear}
+              onValueChange={handleYearChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o ano" />
@@ -85,12 +107,14 @@ export const PeriodSelector = () => {
             </Select>
           </div>
 
-          <Button
-            onClick={handleSubmit}
-            className="w-full hover-scale"
-          >
-            Continuar
-          </Button>
+          {showContinueButton && (
+            <Button
+              onClick={handleSubmit}
+              className="w-full hover-scale"
+            >
+              Continuar
+            </Button>
+          )}
         </div>
       </Card>
     </div>

@@ -13,17 +13,27 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
 import { CheckCircle, AlertCircle, Clock } from "lucide-react";
+import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
 
 const MonthlyReport = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedPeriod, setSelectedPeriod] = useState<{ month: string; year: string } | null>(null);
 
   const { data: submissions = [], isLoading } = useQuery({
-    queryKey: ['communication-submissions', selectedDate],
+    queryKey: ['communication-submissions', selectedPeriod],
     queryFn: async () => {
-      const startOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-      const endOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+      if (!selectedPeriod) return [];
+
+      const startOfMonth = new Date(
+        parseInt(selectedPeriod.year),
+        parseInt(selectedPeriod.month) - 1,
+        1
+      );
+      const endOfMonth = new Date(
+        parseInt(selectedPeriod.year),
+        parseInt(selectedPeriod.month),
+        0
+      );
       
       const { data, error } = await supabase
         .from('communication_submissions')
@@ -43,6 +53,7 @@ const MonthlyReport = () => {
 
       return data;
     },
+    enabled: !!selectedPeriod,
   });
 
   const getStatusIcon = (status: string) => {
@@ -77,6 +88,18 @@ const MonthlyReport = () => {
     pending: submissions.filter(s => s.status === 'pending').length,
   };
 
+  if (!selectedPeriod) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+        <h1 className="text-3xl font-bold mb-8">Relatório Mensal</h1>
+        <PeriodSelector 
+          onPeriodSelected={(month, year) => setSelectedPeriod({ month, year })}
+          showContinueButton={false}
+        />
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -86,8 +109,12 @@ const MonthlyReport = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold">Relatório Mensal</h1>
+    <div className="max-w-7xl mx-auto space-y-8 p-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">
+          Relatório de {format(new Date(parseInt(selectedPeriod.year), parseInt(selectedPeriod.month) - 1), "MMMM 'de' yyyy", { locale: ptBR })}
+        </h1>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 flex items-center space-x-4">
