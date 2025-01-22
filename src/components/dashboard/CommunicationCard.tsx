@@ -32,6 +32,34 @@ export const CommunicationCard = ({
     setIsUploading(true);
 
     try {
+      // First check if user is authenticated
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Usuário não autenticado");
+        return;
+      }
+
+      // Get user's profile and notary office
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, notary_office_id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        throw profileError;
+      }
+
+      if (!profile) {
+        toast.error("Perfil não encontrado. Por favor, faça login novamente.");
+        return;
+      }
+
+      if (!profile.notary_office_id) {
+        toast.error("Cartório não encontrado para este usuário");
+        return;
+      }
+
       const filePaths: string[] = [];
       
       // Upload each file to Supabase Storage
@@ -60,17 +88,6 @@ export const CommunicationCard = ({
 
       // Determine status based on submission date vs deadline
       const status = currentDate <= deadlineDate ? 'on_time' : 'late';
-
-      // Get user's profile and notary office
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id, notary_office_id')
-        .eq('id', (await supabase.auth.getUser()).data.user?.id)
-        .single();
-
-      if (!profile) {
-        throw new Error("Perfil não encontrado");
-      }
 
       // Create submission record
       const { error: submissionError } = await supabase
