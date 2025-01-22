@@ -24,7 +24,7 @@ export const StatsOverview = ({ pendingCount }: StatsOverviewProps) => {
       />
       <StatCard
         icon={XCircle}
-        title="Fora do Prazo"
+        title="Atrasadas"
         value={pendingCount}
         iconClassName="text-red-600"
         iconContainerClassName="bg-red-100"
