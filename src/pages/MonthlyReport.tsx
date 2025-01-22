@@ -88,92 +88,91 @@ const MonthlyReport = () => {
     pending: submissions.filter(s => s.status === 'pending').length,
   };
 
-  if (!selectedPeriod) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-        <h1 className="text-3xl font-bold mb-8">Relatório Mensal</h1>
-        <PeriodSelector 
-          onPeriodSelected={(month, year) => setSelectedPeriod({ month, year })}
-          showContinueButton={false}
-        />
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-gray-500">Carregando...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto space-y-8 p-6">
+    <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">
-          Relatório de {format(new Date(parseInt(selectedPeriod.year), parseInt(selectedPeriod.month) - 1), "MMMM 'de' yyyy", { locale: ptBR })}
-        </h1>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 flex items-center space-x-4">
-          <CheckCircle className="h-8 w-8 text-green-500" />
-          <div>
-            <p className="text-sm text-gray-500">No Prazo</p>
-            <p className="text-2xl font-bold">{stats.onTime}</p>
-          </div>
-        </Card>
-        
-        <Card className="p-4 flex items-center space-x-4">
-          <AlertCircle className="h-8 w-8 text-red-500" />
-          <div>
-            <p className="text-sm text-gray-500">Atrasadas</p>
-            <p className="text-2xl font-bold">{stats.late}</p>
-          </div>
-        </Card>
-        
-        <Card className="p-4 flex items-center space-x-4">
-          <Clock className="h-8 w-8 text-yellow-500" />
-          <div>
-            <p className="text-sm text-gray-500">Pendentes</p>
-            <p className="text-2xl font-bold">{stats.pending}</p>
-          </div>
-        </Card>
+        <h1 className="text-3xl font-bold">Relatório Mensal</h1>
       </div>
 
       <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Status</TableHead>
-              <TableHead>Comunicação</TableHead>
-              <TableHead>Usuário</TableHead>
-              <TableHead>Data de Envio</TableHead>
-              <TableHead>Prazo Original</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {submissions.map((submission) => (
-              <TableRow key={submission.id}>
-                <TableCell className="flex items-center space-x-2">
-                  {getStatusIcon(submission.status)}
-                  <span>{getStatusText(submission.status)}</span>
-                </TableCell>
-                <TableCell>{submission.communication_type?.name}</TableCell>
-                <TableCell>{submission.profile?.full_name}</TableCell>
-                <TableCell>
-                  {submission.submission_date
-                    ? format(new Date(submission.submission_date), "dd/MM/yyyy", { locale: ptBR })
-                    : '-'}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(submission.original_deadline), "dd/MM/yyyy", { locale: ptBR })}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="mb-8">
+          <PeriodSelector 
+            onPeriodSelected={(month, year) => setSelectedPeriod({ month, year })}
+            showContinueButton={false}
+          />
+        </div>
+
+        {selectedPeriod && (
+          <>
+            <h2 className="text-xl font-semibold mb-6">
+              Relatório de {format(new Date(parseInt(selectedPeriod.year), parseInt(selectedPeriod.month) - 1), "MMMM 'de' yyyy", { locale: ptBR })}
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <Card className="p-4 flex items-center space-x-4">
+                <CheckCircle className="h-8 w-8 text-green-500" />
+                <div>
+                  <p className="text-sm text-gray-500">No Prazo</p>
+                  <p className="text-2xl font-bold">{stats.onTime}</p>
+                </div>
+              </Card>
+              
+              <Card className="p-4 flex items-center space-x-4">
+                <AlertCircle className="h-8 w-8 text-red-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Atrasadas</p>
+                  <p className="text-2xl font-bold">{stats.late}</p>
+                </div>
+              </Card>
+              
+              <Card className="p-4 flex items-center space-x-4">
+                <Clock className="h-8 w-8 text-yellow-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Pendentes</p>
+                  <p className="text-2xl font-bold">{stats.pending}</p>
+                </div>
+              </Card>
+            </div>
+
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="text-gray-500">Carregando...</div>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Comunicação</TableHead>
+                    <TableHead>Usuário</TableHead>
+                    <TableHead>Data de Envio</TableHead>
+                    <TableHead>Prazo Original</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {submissions.map((submission) => (
+                    <TableRow key={submission.id}>
+                      <TableCell className="flex items-center space-x-2">
+                        {getStatusIcon(submission.status)}
+                        <span>{getStatusText(submission.status)}</span>
+                      </TableCell>
+                      <TableCell>{submission.communication_type?.name}</TableCell>
+                      <TableCell>{submission.profile?.full_name}</TableCell>
+                      <TableCell>
+                        {submission.submission_date
+                          ? format(new Date(submission.submission_date), "dd/MM/yyyy", { locale: ptBR })
+                          : '-'}
+                      </TableCell>
+                      <TableCell>
+                        {format(new Date(submission.original_deadline), "dd/MM/yyyy", { locale: ptBR })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
