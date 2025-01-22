@@ -25,16 +25,16 @@ const Index = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background Video */}
-      <div className="absolute inset-0 w-full h-full">
-        <div className="absolute inset-0 bg-black/40 z-10" /> {/* Overlay */}
+      <div className="fixed inset-0 w-full h-full -z-10">
+        <div className="absolute inset-0 bg-black/40 z-10" />
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         >
           <source
             src="https://player.vimeo.com/external/517090081.hd.mp4?s=88cdcc5d5c9e56696fa49f5568300089b8450e5f&profile_id=175&oauth2_token_id=57447761"
