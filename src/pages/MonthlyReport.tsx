@@ -77,7 +77,7 @@ const MonthlyReport = () => {
         {selectedMonth !== null && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold capitalize">
-              {format(new Date(selectedYear, selectedMonth), "MMMM 'de' yyyy", { locale: ptBR })}
+              {format(new Date(selectedYear, selectedMonth), "MMMM '/' yyyy", { locale: ptBR })}
             </h2>
             <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
               <SubmissionsTable submissions={filteredSubmissions} />
