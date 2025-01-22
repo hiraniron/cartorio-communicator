@@ -49,13 +49,13 @@ export const MonthlyOverview = ({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'on_time':
-        return 'bg-green-50 hover:bg-green-100 text-green-600'; // Verde para "No Prazo"
+        return 'bg-[#F2FCE2] hover:bg-[#F2FCE2]/90'; // Verde para todas no prazo
       case 'late':
-        return 'bg-yellow-100 hover:bg-yellow-200 text-yellow-600'; // Amarelo para "Enviadas Após Prazo"
+        return 'bg-[#D3E4FD] hover:bg-[#D3E4FD]/90'; // Azul para algumas atrasadas
       case 'pending':
-        return 'bg-red-100 hover:bg-red-200 text-red-600'; // Vermelho para "Pendentes"
+        return 'bg-[#ea384c] hover:bg-[#ea384c]/90 text-white'; // Vermelho para pendentes
       case 'not_started':
-        return 'bg-white hover:bg-gray-50 text-gray-600'; // Branco para meses que não começaram
+        return 'bg-white hover:bg-gray-50'; // Branco para meses que não começaram
       default:
         return '';
     }
