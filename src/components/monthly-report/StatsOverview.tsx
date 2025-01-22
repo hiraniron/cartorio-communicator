@@ -12,7 +12,7 @@ interface StatsOverviewProps {
 
 export const StatsOverview = ({ stats }: StatsOverviewProps) => {
   return (
-    <div className="grid grid-cols-4 gap-4 bg-[#9b87f5]/90 p-4 rounded-lg">
+    <div className="grid grid-cols-4 gap-4">
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-full bg-[#E5DEFF]">
           <AlertCircle className="h-5 w-5 text-[#6E59A5]" />
