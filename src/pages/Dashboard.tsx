@@ -6,6 +6,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatsOverview } from "@/components/dashboard/StatsOverview";
 import { CommunicationsList } from "@/components/dashboard/CommunicationsList";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Link } from "react-router-dom";
 import type { CommunicationType } from "@/types/communication";
 
 const Dashboard = () => {
@@ -15,12 +24,8 @@ const Dashboard = () => {
   const { data: communications = [], isLoading } = useQuery({
     queryKey: ['communication-types', year, month],
     queryFn: async () => {
-      // Format month to ensure it has 2 digits (e.g., "01" for January)
       const formattedMonth = month?.padStart(2, '0');
-      
-      // Create a date string for the first day of the selected month and year
       const startDate = `${year}-${formattedMonth}-01`;
-      // Create a date string for the last day of the selected month and year
       const lastDay = new Date(Number(year), Number(month), 0).getDate();
       const endDate = `${year}-${formattedMonth}-${lastDay}`;
       
@@ -67,6 +72,27 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={Link} to="/">
+                Início
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink as={Link} to="/dashboard">
+                Dashboard
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>
+                {month}/{year}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <DashboardHeader month={month} year={year} />
         <StatsOverview pendingCount={communications.length} />
         <CommunicationsList
