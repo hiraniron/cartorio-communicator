@@ -24,7 +24,7 @@ export const StatsOverview = ({ pendingCount }: StatsOverviewProps) => {
       />
       <StatCard
         icon={AlertCircle}
-        title="Enviadas depois do prazo"
+        title="Enviadas após prazo"
         value={pendingCount}
         iconClassName="text-primary"
         iconContainerClassName="bg-primary/10"
