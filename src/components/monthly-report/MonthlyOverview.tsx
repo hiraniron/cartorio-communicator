@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CheckSquare, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckSquare, Calendar, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface MonthlyOverviewProps {
@@ -30,6 +30,9 @@ export const MonthlyOverview = ({
       return submissionDate.getMonth() === month;
     });
 
+    // Retorna false se não houver submissões no mês
+    if (monthSubmissions.length === 0) return false;
+
     return monthSubmissions.every(submission => submission.status === 'on_time');
   };
 
@@ -53,7 +56,11 @@ export const MonthlyOverview = ({
               <span className="capitalize">{name}</span>
             </div>
             <div className="flex items-center gap-2">
-              {isOk && <CheckSquare className="h-4 w-4 text-green-500" />}
+              {isOk ? (
+                <CheckSquare className="h-4 w-4 text-green-500" />
+              ) : (
+                <AlertCircle className="h-4 w-4 text-yellow-500" />
+              )}
               {isSelected ? (
                 <ChevronUp className="h-4 w-4" />
               ) : (
