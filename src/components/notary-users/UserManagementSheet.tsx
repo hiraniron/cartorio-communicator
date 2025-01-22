@@ -1,6 +1,6 @@
 import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { UserRegistrationForm } from "@/components/notary-registration/UserRegistrationForm";
 
 interface User {
@@ -38,6 +38,12 @@ export function UserManagementSheet({
           <SheetTitle>
             {editingUser ? "Editar Usuário" : "Adicionar Novo Usuário"}
           </SheetTitle>
+          <SheetDescription>
+            {editingUser 
+              ? "Faça as alterações necessárias nos dados do usuário."
+              : "Preencha os dados para adicionar um novo usuário ao cartório."
+            }
+          </SheetDescription>
         </SheetHeader>
         <UserRegistrationForm 
           onSubmit={onSubmit}
