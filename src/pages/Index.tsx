@@ -27,8 +27,8 @@ const Index = () => {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background Video */}
-      <div className="fixed inset-0 w-full h-full -z-10">
-        <div className="absolute inset-0 bg-black/40 z-10" />
+      <div className="fixed inset-0 w-full h-full">
+        <div className="absolute inset-0 bg-black/40" />
         <video
           autoPlay
           loop
