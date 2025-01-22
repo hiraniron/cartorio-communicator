@@ -29,6 +29,7 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
       deadlines,
       selectedMonths,
       requiresPdf,
+      pdfTemplate,
     });
 
     if (!isValid) return;
@@ -73,7 +74,6 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
   return {
     formState: {
       name,
-      customName: "", // Kept for compatibility
       description,
       whatToInform,
       deadlines,
@@ -83,7 +83,6 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
     },
     formHandlers: {
       setName,
-      setCustomName: () => {}, // Kept for compatibility
       setDescription,
       setWhatToInform,
       setSelectedMonths,

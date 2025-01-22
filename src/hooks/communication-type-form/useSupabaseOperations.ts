@@ -9,7 +9,7 @@ interface CommunicationTypeData {
   deadlines: string[];
   selectedMonths: Date[];
   requiresPdf: boolean;
-  pdfTemplate?: string;
+  pdfTemplate: string;
 }
 
 export const saveCommunicationType = async (
@@ -23,7 +23,7 @@ export const saveCommunicationType = async (
     deadlines: data.deadlines.map(d => parseInt(d)),
     selected_months: data.selectedMonths.map(date => format(date, 'yyyy-MM-dd')),
     requires_pdf: data.requiresPdf,
-    pdf_template: data.pdfTemplate
+    pdf_template: data.pdfTemplate || null
   };
 
   if (id) {
