@@ -1,19 +1,13 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatsOverview } from "@/components/dashboard/StatsOverview";
 import { CommunicationsList } from "@/components/dashboard/CommunicationsList";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { DashboardBreadcrumb } from "@/components/dashboard/DashboardBreadcrumb";
+import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
 import type { CommunicationType } from "@/types/communication";
 
 const Dashboard = () => {
@@ -61,33 +55,13 @@ const Dashboard = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen p-6 flex items-center justify-center">
-        <div className="text-gray-500">Carregando...</div>
-      </div>
-    );
+    return <DashboardLoading />;
   }
 
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-in">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <Link to="/">Início</Link>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <Link to="/dashboard">Dashboard</Link>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>
-                {month}/{year}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <DashboardBreadcrumb month={month!} year={year!} />
         <DashboardHeader month={month} year={year} />
         <StatsOverview pendingCount={communications.length} />
         <CommunicationsList
