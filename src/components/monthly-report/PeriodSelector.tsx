@@ -22,10 +22,10 @@ export const PeriodSelector = ({
         value={selectedYear.toString()}
         onValueChange={onYearChange}
       >
-        <SelectTrigger>
+        <SelectTrigger className="bg-white dark:bg-gray-800">
           <SelectValue placeholder="Selecione o ano" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white dark:bg-gray-800">
           {years.map((year) => (
             <SelectItem key={year} value={year.toString()}>
               {year}
