@@ -19,7 +19,7 @@ export const Navigation = () => {
         <Link to="/">
           <Button 
             variant={isActive("/") ? "default" : "ghost"}
-            className="gap-2"
+            className="gap-2 hover:bg-primary hover:text-primary-foreground"
           >
             <Home className="h-4 w-4" />
             Início
@@ -28,7 +28,7 @@ export const Navigation = () => {
         <Link to="/monthly-report">
           <Button 
             variant={isActive("/monthly-report") ? "default" : "ghost"}
-            className="gap-2"
+            className="gap-2 hover:bg-primary hover:text-primary-foreground"
           >
             <BarChart className="h-4 w-4" />
             Relatório Mensal
@@ -46,7 +46,7 @@ export const Navigation = () => {
                   ? "default" 
                   : "ghost"
               }
-              className="gap-2"
+              className="gap-2 hover:bg-primary hover:text-primary-foreground"
             >
               <Settings2 className="h-4 w-4" />
               Administração
