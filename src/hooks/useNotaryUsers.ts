@@ -14,8 +14,13 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
       
       console.log("Fetching users for notary office:", notaryOfficeId);
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
+        .from('profiles')
+        .select(`
+          *,
+          user:id (
+            email
+          )
+        `)
         .eq("notary_office_id", notaryOfficeId);
 
       if (error) {
@@ -24,8 +29,14 @@ export function useNotaryUsers(notaryOfficeId: string | undefined) {
         throw error;
       }
 
-      console.log("Fetched users:", data);
-      return data || [];
+      // Transform the data to include email at the top level
+      const transformedData = data?.map(profile => ({
+        ...profile,
+        email: profile.user?.email
+      })) || [];
+
+      console.log("Fetched users:", transformedData);
+      return transformedData;
     },
     enabled: !!notaryOfficeId,
     retry: 1,
