@@ -25,6 +25,11 @@ export const MonthlyOverview = ({
   });
 
   const getMonthStatus = (month: number) => {
+    // Verifica se o mês ainda não começou
+    const currentDate = new Date();
+    const monthDate = new Date(selectedYear, month, 1);
+    if (monthDate > currentDate) return 'not_started';
+
     const monthSubmissions = submissions.filter(submission => {
       const submissionDate = new Date(submission.submission_date);
       return submissionDate.getMonth() === month;
@@ -49,6 +54,8 @@ export const MonthlyOverview = ({
         return 'bg-[#D3E4FD] hover:bg-[#D3E4FD]/90'; // Azul para algumas atrasadas
       case 'pending':
         return 'bg-[#ea384c] hover:bg-[#ea384c]/90 text-white'; // Vermelho para pendentes
+      case 'not_started':
+        return 'bg-white hover:bg-gray-50'; // Branco para meses que não começaram
       default:
         return '';
     }
