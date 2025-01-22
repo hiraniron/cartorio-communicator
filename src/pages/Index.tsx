@@ -39,7 +39,7 @@ const Index = () => {
         <div className="flex justify-center">
           <Button
             onClick={handleStartCommunications}
-            className="text-xl px-8 py-6 hover-scale bg-primary hover:bg-primary/90 shadow-lg"
+            className="text-xl px-8 py-6 hover-scale bg-[#9b87f5] hover:bg-[#7E69AB] shadow-lg"
             size="lg"
           >
             Iniciar Comunicações
