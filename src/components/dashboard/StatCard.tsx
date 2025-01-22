@@ -23,7 +23,7 @@ export const StatCard = ({
           <Icon className={`w-6 h-6 ${iconClassName}`} />
         </div>
         <div>
-          <h3 className="font-medium">{title}</h3>
+          <h3 className="text-sm font-medium">{title}</h3>
           <p className="text-2xl font-bold">{value}</p>
         </div>
       </div>
