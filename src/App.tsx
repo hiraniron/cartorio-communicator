@@ -31,8 +31,10 @@ function App() {
               path="*"
               element={
                 <>
-                  <NotaryHeader />
-                  <Navigation />
+                  <div className="sticky top-0 z-50">
+                    <NotaryHeader />
+                    <Navigation />
+                  </div>
                   <div className="p-6">
                     <Routes>
                       <Route path="/" element={<Index />} />
