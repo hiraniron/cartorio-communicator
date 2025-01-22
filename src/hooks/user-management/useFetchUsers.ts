@@ -4,10 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@/types/user";
 import { Database } from "@/integrations/supabase/types";
 
-type ProfileWithAuth = Database['public']['Tables']['profiles']['Row'] & {
+type ProfileWithAuth = {
+  id: string;
+  full_name: string;
+  role: "admin" | "staff";
+  notary_office_id: string | null;
+  created_at: string;
+  updated_at: string;
   auth_user: {
     email: string;
-  } | null;
+  };
 };
 
 export function useFetchUsers(notaryOfficeId: string | undefined) {
@@ -19,7 +25,10 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
       console.log("Fetching users for notary office:", notaryOfficeId);
       const { data, error } = await supabase
         .from('profiles')
-        .select('*, auth_user:id(email)')
+        .select(`
+          *,
+          auth_user:users!profiles_id_fkey(email)
+        `)
         .eq("notary_office_id", notaryOfficeId);
 
       if (error) {
@@ -29,7 +38,7 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
       }
 
       // Transform the data to include email at the top level
-      const transformedData = (data as ProfileWithAuth[])
+      const transformedData = (data as unknown as ProfileWithAuth[])
         .filter(profile => {
           if (!profile.auth_user?.email) {
             console.warn(`User ${profile.id} has no email address`);
