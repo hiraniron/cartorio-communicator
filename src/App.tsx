@@ -26,8 +26,6 @@ function App() {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
           <Routes>
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<PeriodSelector />} />
-            <Route path="/dashboard/:year/:month" element={<Dashboard />} />
             <Route
               path="*"
               element={
@@ -36,6 +34,8 @@ function App() {
                   <div className="p-6">
                     <Routes>
                       <Route path="/" element={<Index />} />
+                      <Route path="/dashboard" element={<PeriodSelector />} />
+                      <Route path="/dashboard/:year/:month" element={<Dashboard />} />
                       <Route path="/notary-registration" element={<NotaryOfficeRegistration />} />
                       <Route path="/notary-offices" element={<NotaryOfficesList />} />
                       <Route path="/notary-offices/:id/users" element={<NotaryOfficeUsers />} />
