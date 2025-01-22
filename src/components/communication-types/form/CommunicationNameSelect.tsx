@@ -27,10 +27,10 @@ export const CommunicationNameSelect = ({
       <div className="space-y-2">
         <Label htmlFor="name">Nome da Comunicação</Label>
         <Select value={name} onValueChange={onNameChange}>
-          <SelectTrigger>
+          <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Selecione o tipo de comunicação" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border shadow-lg">
             <SelectItem value="defensoria">Defensoria</SelectItem>
             <SelectItem value="sirc-inss-pfb">SIRC-INSS/PFB</SelectItem>
             <SelectItem value="fecom">FECOM</SelectItem>
@@ -64,6 +64,7 @@ export const CommunicationNameSelect = ({
             value={customName}
             onChange={(e) => onCustomNameChange(e.target.value)}
             placeholder="Digite o nome da comunicação"
+            className="bg-white"
           />
         </div>
       )}
