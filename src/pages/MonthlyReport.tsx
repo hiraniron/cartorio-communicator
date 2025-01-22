@@ -13,17 +13,40 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
 import { CheckCircle, AlertCircle, Clock } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const months = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
 
 const MonthlyReport = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const currentDate = new Date();
+  const previousMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1;
+  const previousMonthYear = currentDate.getMonth() === 0 
+    ? currentDate.getFullYear() - 1 
+    : currentDate.getFullYear();
+
+  const [selectedMonth, setSelectedMonth] = useState(previousMonth);
+  const [selectedYear, setSelectedYear] = useState(previousMonthYear);
+
+  const years = Array.from(
+    { length: 5 },
+    (_, i) => (currentDate.getFullYear() - 2 + i)
+  );
 
   const { data: submissions = [], isLoading } = useQuery({
-    queryKey: ['communication-submissions', selectedDate],
+    queryKey: ['communication-submissions', selectedMonth, selectedYear],
     queryFn: async () => {
-      const startOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-      const endOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+      const startOfMonth = new Date(selectedYear, selectedMonth, 1);
+      const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
       
       const { data, error } = await supabase
         .from('communication_submissions')
@@ -86,36 +109,76 @@ const MonthlyReport = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 p-6">
       <h1 className="text-3xl font-bold">Relatório Mensal</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 flex items-center space-x-4">
-          <CheckCircle className="h-8 w-8 text-green-500" />
-          <div>
-            <p className="text-sm text-gray-500">No Prazo</p>
-            <p className="text-2xl font-bold">{stats.onTime}</p>
+      <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Mês</label>
+            <Select
+              value={selectedMonth.toString()}
+              onValueChange={(value) => setSelectedMonth(parseInt(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o mês" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month, index) => (
+                  <SelectItem key={index} value={index.toString()}>
+                    {month}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </Card>
-        
-        <Card className="p-4 flex items-center space-x-4">
-          <AlertCircle className="h-8 w-8 text-red-500" />
-          <div>
-            <p className="text-sm text-gray-500">Atrasadas</p>
-            <p className="text-2xl font-bold">{stats.late}</p>
-          </div>
-        </Card>
-        
-        <Card className="p-4 flex items-center space-x-4">
-          <Clock className="h-8 w-8 text-yellow-500" />
-          <div>
-            <p className="text-sm text-gray-500">Pendentes</p>
-            <p className="text-2xl font-bold">{stats.pending}</p>
-          </div>
-        </Card>
-      </div>
 
-      <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Ano</label>
+            <Select
+              value={selectedYear.toString()}
+              onValueChange={(value) => setSelectedYear(parseInt(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o ano" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="p-4 flex items-center space-x-4">
+            <CheckCircle className="h-8 w-8 text-green-500" />
+            <div>
+              <p className="text-sm text-gray-500">No Prazo</p>
+              <p className="text-2xl font-bold">{stats.onTime}</p>
+            </div>
+          </Card>
+          
+          <Card className="p-4 flex items-center space-x-4">
+            <AlertCircle className="h-8 w-8 text-red-500" />
+            <div>
+              <p className="text-sm text-gray-500">Atrasadas</p>
+              <p className="text-2xl font-bold">{stats.late}</p>
+            </div>
+          </Card>
+          
+          <Card className="p-4 flex items-center space-x-4">
+            <Clock className="h-8 w-8 text-yellow-500" />
+            <div>
+              <p className="text-sm text-gray-500">Pendentes</p>
+              <p className="text-2xl font-bold">{stats.pending}</p>
+            </div>
+          </Card>
+        </div>
+
         <Table>
           <TableHeader>
             <TableRow>
