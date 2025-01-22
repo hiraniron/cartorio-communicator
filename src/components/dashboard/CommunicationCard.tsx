@@ -52,7 +52,7 @@ export const CommunicationCard = ({
             className="hover-scale"
           >
             <Paperclip className="w-4 h-4 mr-2" />
-            Anexar
+            Enviar
           </Button>
         </div>
       </div>
