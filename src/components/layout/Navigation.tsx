@@ -76,7 +76,7 @@ export const Navigation = () => {
               <Link to="/registered-communications">
                 <DropdownMenuItem>
                   <MessageSquare className="h-4 w-4 mr-2" />
-                  Comunicações cadastradas
+                  Comunicações Cadastradas
                 </DropdownMenuItem>
               </Link>
               <Link to="/notary-offices">
