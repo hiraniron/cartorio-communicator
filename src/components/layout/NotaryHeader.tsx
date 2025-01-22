@@ -34,7 +34,7 @@ export const NotaryHeader = () => {
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 px-6">
+    <div className="bg-gradient-to-r from-[#33C3F0] to-[#6DD5FA] text-white py-3 px-6 shadow-lg">
       <h1 className="text-2xl font-bold text-center">
         {profile.notary_office.name}
       </h1>

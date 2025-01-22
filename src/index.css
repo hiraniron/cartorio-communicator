@@ -49,3 +49,19 @@
 .hover-scale {
   @apply transition-transform duration-200 hover:scale-[1.02];
 }
+
+/* Global background style */
+.app-background {
+  @apply min-h-screen bg-gradient-to-br from-[#e7f0fd] to-[#accbee];
+}
+
+/* Glass card styles */
+.glass-effect {
+  @apply bg-white/60 backdrop-blur-md border border-white/20 shadow-lg rounded-lg;
+}
+
+/* Gradient button styles */
+.gradient-button {
+  @apply bg-gradient-to-r from-[#33C3F0] to-[#6DD5FA] hover:from-[#6DD5FA] hover:to-[#33C3F0] 
+         text-white shadow-lg border-0 transition-all duration-300 ease-in-out;
+}

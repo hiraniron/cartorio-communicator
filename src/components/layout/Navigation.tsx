@@ -19,7 +19,7 @@ export const Navigation = () => {
   };
   
   return (
-    <nav className="bg-white border-b py-4 sticky top-0 z-50 shadow-sm">
+    <nav className="glass-effect py-4 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex justify-between">
         <div className="flex gap-2">
           <NavButton 
