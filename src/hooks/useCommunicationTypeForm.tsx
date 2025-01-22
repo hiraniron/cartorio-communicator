@@ -8,7 +8,6 @@ import type { CommunicationType } from "@/types/communication";
 export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
   const navigate = useNavigate();
   const [name, setName] = useState(initialData?.name ?? "");
-  const [customName, setCustomName] = useState(initialData?.custom_name ?? "");
   const [description, setDescription] = useState(initialData?.description ?? "");
   const [whatToInform, setWhatToInform] = useState(initialData?.what_to_inform ?? "");
   const [deadlines, setDeadlines] = useState<string[]>(
@@ -19,9 +18,7 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
   );
 
   const validateForm = () => {
-    const finalName = name === "outros" ? customName : name;
-    
-    if (!finalName || !description || !whatToInform || deadlines.some(d => !d) || selectedMonths.length === 0) {
+    if (!name || !description || !whatToInform || deadlines.some(d => !d) || selectedMonths.length === 0) {
       toast.error("Por favor, preencha todos os campos");
       return false;
     }
@@ -44,12 +41,9 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
     
     if (!validateForm()) return;
 
-    const finalName = name === "outros" ? customName : name;
-
     try {
       const data = {
-        name: finalName,
-        custom_name: name === "outros" ? customName : null,
+        name,
         description,
         what_to_inform: whatToInform,
         deadlines: deadlines.map(d => parseInt(d)),
@@ -102,7 +96,7 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
   return {
     formState: {
       name,
-      customName,
+      customName: "",
       description,
       whatToInform,
       deadlines,
@@ -110,7 +104,7 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
     },
     formHandlers: {
       setName,
-      setCustomName,
+      setCustomName: () => {}, // Kept for compatibility
       setDescription,
       setWhatToInform,
       setSelectedMonths,
