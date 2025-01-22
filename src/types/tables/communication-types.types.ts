@@ -1,36 +1,36 @@
 export interface CommunicationTypesTable {
   Row: {
-    created_at: string
-    custom_name: string | null
-    deadlines: number[]
-    description: string
-    id: string
-    name: string
-    selected_months: string[]
-    updated_at: string
-    what_to_inform: string
+    id: string;
+    name: string;
+    custom_name: string | null;
+    description: string;
+    what_to_inform: string;
+    deadlines: number[];
+    selected_months: string[];
+    created_at: string;
+    updated_at: string;
   }
   Insert: {
-    created_at?: string
-    custom_name?: string | null
-    deadlines: number[]
-    description: string
-    id?: string
-    name: string
-    selected_months: string[]
-    updated_at?: string
-    what_to_inform: string
+    id?: string;
+    name: string;
+    custom_name?: string | null;
+    description: string;
+    what_to_inform: string;
+    deadlines: number[];
+    selected_months: string[];
+    created_at?: string;
+    updated_at?: string;
   }
   Update: {
-    created_at?: string
-    custom_name?: string | null
-    deadlines?: number[]
-    description?: string
-    id?: string
-    name?: string
-    selected_months?: string[]
-    updated_at?: string
-    what_to_inform?: string
+    id?: string;
+    name?: string;
+    custom_name?: string | null;
+    description?: string;
+    what_to_inform?: string;
+    deadlines?: number[];
+    selected_months?: string[];
+    created_at?: string;
+    updated_at?: string;
   }
   Relationships: []
 }

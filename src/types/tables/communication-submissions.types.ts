@@ -1,36 +1,36 @@
 export interface CommunicationSubmissionsTable {
   Row: {
-    communication_type_id: string
-    created_at: string
-    id: string
-    notary_office_id: string
-    original_deadline: string
-    profile_id: string
-    status: string
-    submission_date: string
-    updated_at: string
+    id: string;
+    communication_type_id: string;
+    profile_id: string;
+    notary_office_id: string;
+    submission_date: string;
+    original_deadline: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
   }
   Insert: {
-    communication_type_id: string
-    created_at?: string
-    id?: string
-    notary_office_id: string
-    original_deadline: string
-    profile_id: string
-    status: string
-    submission_date?: string
-    updated_at?: string
+    id?: string;
+    communication_type_id: string;
+    profile_id: string;
+    notary_office_id: string;
+    submission_date?: string;
+    original_deadline: string;
+    status: string;
+    created_at?: string;
+    updated_at?: string;
   }
   Update: {
-    communication_type_id?: string
-    created_at?: string
-    id?: string
-    notary_office_id?: string
-    original_deadline?: string
-    profile_id?: string
-    status?: string
-    submission_date?: string
-    updated_at?: string
+    id?: string;
+    communication_type_id?: string;
+    profile_id?: string;
+    notary_office_id?: string;
+    submission_date?: string;
+    original_deadline?: string;
+    status?: string;
+    created_at?: string;
+    updated_at?: string;
   }
   Relationships: [
     {

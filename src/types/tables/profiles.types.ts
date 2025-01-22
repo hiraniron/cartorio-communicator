@@ -1,30 +1,30 @@
 export interface ProfilesTable {
   Row: {
-    created_at: string
-    email: string
-    full_name: string
-    id: string
-    notary_office_id: string | null
-    role: "admin" | "staff"
-    updated_at: string
+    id: string;
+    notary_office_id: string | null;
+    full_name: string;
+    email: string;
+    role: "admin" | "staff";
+    created_at: string;
+    updated_at: string;
   }
   Insert: {
-    created_at?: string
-    email: string
-    full_name: string
-    id: string
-    notary_office_id?: string | null
-    role: "admin" | "staff"
-    updated_at?: string
+    id: string;
+    notary_office_id?: string | null;
+    full_name: string;
+    email: string;
+    role: "admin" | "staff";
+    created_at?: string;
+    updated_at?: string;
   }
   Update: {
-    created_at?: string
-    email?: string
-    full_name?: string
-    id?: string
-    notary_office_id?: string | null
-    role?: "admin" | "staff"
-    updated_at?: string
+    id?: string;
+    notary_office_id?: string | null;
+    full_name?: string;
+    email?: string;
+    role?: "admin" | "staff";
+    created_at?: string;
+    updated_at?: string;
   }
   Relationships: [
     {
