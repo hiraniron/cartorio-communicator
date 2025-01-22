@@ -63,7 +63,11 @@ export const CommunicationCard = ({
             fileInput.type = 'file';
             fileInput.multiple = true;
             fileInput.accept = '.pdf,.doc,.docx';
-            fileInput.onchange = (e) => onFileUpload(e as React.ChangeEvent<HTMLInputElement>);
+            fileInput.onchange = (e) => {
+              if (e.target instanceof HTMLInputElement) {
+                onFileUpload({ target: e.target } as React.ChangeEvent<HTMLInputElement>);
+              }
+            };
             fileInput.click();
           }}
         >
