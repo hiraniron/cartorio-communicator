@@ -9,4 +9,5 @@ export interface CommunicationType {
   created_at?: string;
   updated_at?: string;
   requires_pdf?: boolean;
+  pdf_template?: string;
 }
