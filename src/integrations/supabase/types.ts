@@ -75,6 +75,7 @@ export type Database = {
           description: string
           id: string
           name: string
+          requires_pdf: boolean | null
           selected_months: string[]
           updated_at: string
           what_to_inform: string
@@ -86,6 +87,7 @@ export type Database = {
           description: string
           id?: string
           name: string
+          requires_pdf?: boolean | null
           selected_months: string[]
           updated_at?: string
           what_to_inform: string
@@ -97,6 +99,7 @@ export type Database = {
           description?: string
           id?: string
           name?: string
+          requires_pdf?: boolean | null
           selected_months?: string[]
           updated_at?: string
           what_to_inform?: string
