@@ -16,8 +16,6 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
   const [selectedMonths, setSelectedMonths] = useState<Date[]>(
     initialData?.selected_months.map(date => new Date(date)) ?? []
   );
-  const [requiresPdf, setRequiresPdf] = useState(initialData?.requires_pdf ?? false);
-  const [pdfTemplate, setPdfTemplate] = useState(initialData?.pdf_template ?? "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,24 +25,14 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
       description,
       whatToInform,
       deadlines,
-      selectedMonths,
-      requiresPdf,
-      pdfTemplate,
+      selectedMonths
     });
 
     if (!isValid) return;
 
     try {
       await saveCommunicationType(
-        { 
-          name, 
-          description, 
-          whatToInform, 
-          deadlines, 
-          selectedMonths, 
-          requiresPdf,
-          pdfTemplate,
-        },
+        { name, description, whatToInform, deadlines, selectedMonths },
         initialData?.id
       );
       navigate('/registered-communications');
@@ -74,23 +62,21 @@ export const useCommunicationTypeForm = (initialData?: CommunicationType) => {
   return {
     formState: {
       name,
+      customName: "", // Kept for compatibility
       description,
       whatToInform,
       deadlines,
       selectedMonths,
-      requiresPdf,
-      pdfTemplate,
     },
     formHandlers: {
       setName,
+      setCustomName: () => {}, // Kept for compatibility
       setDescription,
       setWhatToInform,
       setSelectedMonths,
       addDeadline,
       removeDeadline,
       updateDeadline,
-      setRequiresPdf,
-      setPdfTemplate,
     },
     handleSubmit,
   };

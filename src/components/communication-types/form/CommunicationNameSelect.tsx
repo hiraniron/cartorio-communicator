@@ -3,7 +3,9 @@ import { Input } from "@/components/ui/input";
 
 interface CommunicationNameSelectProps {
   name: string;
+  customName: string;
   onNameChange: (value: string) => void;
+  onCustomNameChange: (value: string) => void;
 }
 
 export const CommunicationNameSelect = ({
