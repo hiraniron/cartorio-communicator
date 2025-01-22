@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PeriodSelector } from "@/components/monthly-report/PeriodSelector";
 import { MonthlyOverview } from "@/components/monthly-report/MonthlyOverview";
 import { SubmissionsTable } from "@/components/monthly-report/SubmissionsTable";
+import { StatsOverview } from "@/components/monthly-report/StatsOverview";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -46,6 +47,13 @@ const MonthlyReport = () => {
       })
     : [];
 
+  const stats = {
+    onTime: filteredSubmissions.filter(s => s.status === 'on_time').length,
+    late: filteredSubmissions.filter(s => s.status === 'late').length,
+    pending: filteredSubmissions.filter(s => s.status === 'pending').length,
+    total: filteredSubmissions.length,
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -79,6 +87,7 @@ const MonthlyReport = () => {
             <h2 className="text-xl font-semibold capitalize">
               {format(new Date(selectedYear, selectedMonth), "MMMM '/' yyyy", { locale: ptBR })}
             </h2>
+            <StatsOverview stats={stats} />
             <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 shadow-sm">
               <SubmissionsTable submissions={filteredSubmissions} />
             </div>
