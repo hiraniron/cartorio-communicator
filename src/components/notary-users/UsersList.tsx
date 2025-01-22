@@ -19,6 +19,17 @@ interface UsersListProps {
 }
 
 export function UsersList({ users, isLoading, onEdit, onDelete }: UsersListProps) {
+  const getRoleDisplay = (role: "admin" | "staff") => {
+    switch (role) {
+      case "admin":
+        return "Administrador";
+      case "staff":
+        return "Escrevente";
+      default:
+        return role;
+    }
+  };
+
   if (isLoading) {
     return (
       <TableRow>
@@ -47,7 +58,7 @@ export function UsersList({ users, isLoading, onEdit, onDelete }: UsersListProps
       {users.map((user) => (
         <TableRow key={user.id}>
           <TableCell>{user.full_name}</TableCell>
-          <TableCell className="capitalize">{user.role}</TableCell>
+          <TableCell>{getRoleDisplay(user.role)}</TableCell>
           <TableCell className="text-right">
             <div className="flex justify-end gap-2">
               <Button
