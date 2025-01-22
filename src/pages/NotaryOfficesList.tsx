@@ -51,6 +51,10 @@ export default function NotaryOfficesList() {
     setShowEditForm(true);
   };
 
+  const selectedNotary = notaryOffices?.find(
+    (office) => office.id === selectedNotaryId
+  );
+
   return (
     <div className="container mx-auto py-6">
       <Card className="p-6">
@@ -70,6 +74,7 @@ export default function NotaryOfficesList() {
             <NotaryOfficeForm
               onSubmit={handleEditNotary}
               onBack={() => setShowEditForm(false)}
+              initialData={selectedNotary}
             />
           )}
         </SheetContent>

@@ -109,8 +109,8 @@ export type Database = {
           city: string
           created_at: string
           id: string
+          institutional_email: string
           name: string
-          phone: string
           updated_at: string
         }
         Insert: {
@@ -118,8 +118,8 @@ export type Database = {
           city: string
           created_at?: string
           id?: string
+          institutional_email?: string
           name: string
-          phone: string
           updated_at?: string
         }
         Update: {
@@ -127,8 +127,8 @@ export type Database = {
           city?: string
           created_at?: string
           id?: string
+          institutional_email?: string
           name?: string
-          phone?: string
           updated_at?: string
         }
         Relationships: []
