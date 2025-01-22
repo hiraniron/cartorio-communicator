@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router-dom";
 import { Navigation } from "@/components/layout/Navigation";
+import { NotaryHeader } from "@/components/layout/NotaryHeader";
 import "./App.css";
 
 import Index from "@/pages/Index";
@@ -30,6 +31,7 @@ function App() {
               path="*"
               element={
                 <>
+                  <NotaryHeader />
                   <Navigation />
                   <div className="p-6">
                     <Routes>
