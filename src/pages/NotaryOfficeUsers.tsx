@@ -1,5 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -14,6 +16,7 @@ import { User } from "@/types/user";
 
 export default function NotaryOfficeUsers() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const {
     users,
     isLoading,
@@ -28,6 +31,15 @@ export default function NotaryOfficeUsers() {
 
   return (
     <div className="container mx-auto py-6">
+      <Button
+        variant="ghost"
+        className="mb-6"
+        onClick={() => navigate("/notary-offices")}
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Voltar para Lista de Cartórios
+      </Button>
+
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Usuários do Cartório</h2>
