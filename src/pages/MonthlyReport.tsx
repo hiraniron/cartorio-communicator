@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, AlertCircle, Clock } from "lucide-react";
+import { CheckCircle, AlertCircle, Clock, Calendar } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -98,6 +98,7 @@ const MonthlyReport = () => {
     onTime: submissions.filter(s => s.status === 'on_time').length,
     late: submissions.filter(s => s.status === 'late').length,
     pending: submissions.filter(s => s.status === 'pending').length,
+    total: submissions.length,
   };
 
   if (isLoading) {
@@ -153,7 +154,7 @@ const MonthlyReport = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="p-4 flex items-center space-x-4">
             <CheckCircle className="h-8 w-8 text-green-500" />
             <div>
@@ -175,6 +176,14 @@ const MonthlyReport = () => {
             <div>
               <p className="text-sm text-gray-500">Pendentes</p>
               <p className="text-2xl font-bold">{stats.pending}</p>
+            </div>
+          </Card>
+
+          <Card className="p-4 flex items-center space-x-4">
+            <Calendar className="h-8 w-8 text-blue-500" />
+            <div>
+              <p className="text-sm text-gray-500">Total</p>
+              <p className="text-2xl font-bold">{stats.total}</p>
             </div>
           </Card>
         </div>
