@@ -39,7 +39,7 @@ const NotaryOfficeRegistration = () => {
           name: values.name,
           address: values.address,
           city: values.city,
-          phone: values.phone,
+          institutional_email: values.institutional_email,
         })
         .select()
         .single();
