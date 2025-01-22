@@ -65,16 +65,16 @@ export const Navigation = () => {
                 Comunicações cadastradas
               </DropdownMenuItem>
             </Link>
-            <Link to="/notary-registration">
-              <DropdownMenuItem>
-                <Building2 className="h-4 w-4 mr-2" />
-                Editar Cartório
-              </DropdownMenuItem>
-            </Link>
             <Link to="/notary-offices">
               <DropdownMenuItem>
                 <Building2 className="h-4 w-4 mr-2" />
                 Listar Cartórios
+              </DropdownMenuItem>
+            </Link>
+            <Link to="/notary-registration">
+              <DropdownMenuItem>
+                <Building2 className="h-4 w-4 mr-2" />
+                Editar Cartório
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>
