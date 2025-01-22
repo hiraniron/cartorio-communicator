@@ -40,24 +40,24 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
 
       <Card className="p-6 bg-white/50 backdrop-blur-sm shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-full bg-green-50">
-            <Clock className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <p className="text-sm text-black">No Prazo</p>
-            <p className="text-2xl font-bold">{stats.onTime}</p>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="p-6 bg-white/50 backdrop-blur-sm shadow-sm">
-        <div className="flex items-center gap-4">
           <div className="p-3 rounded-full bg-yellow-100">
             <XOctagon className="w-6 h-6 text-yellow-600" />
           </div>
           <div>
             <p className="text-sm text-black">Enviadas Após Prazo</p>
             <p className="text-2xl font-bold">{stats.late}</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6 bg-white/50 backdrop-blur-sm shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-full bg-green-50">
+            <Clock className="w-6 h-6 text-green-600" />
+          </div>
+          <div>
+            <p className="text-sm text-black">No Prazo</p>
+            <p className="text-2xl font-bold">{stats.onTime}</p>
           </div>
         </div>
       </Card>
