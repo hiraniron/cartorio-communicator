@@ -24,7 +24,7 @@ export const CommunicationCard = ({
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-xl font-semibold">
-            {comm.name === 'outros' ? comm.custom_name : comm.name}
+            {comm.name}
           </h3>
           <p className="text-gray-500 mt-1">{comm.description}</p>
           <p className="text-gray-500 mt-1">O que informar: {comm.what_to_inform}</p>
