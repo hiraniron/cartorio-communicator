@@ -19,10 +19,7 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
       console.log("Fetching users for notary office:", notaryOfficeId);
       const { data, error } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          auth_user:auth.users(email)
-        `)
+        .select('*, auth_user:id(email)')
         .eq("notary_office_id", notaryOfficeId);
 
       if (error) {
@@ -31,10 +28,10 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
         throw error;
       }
 
-      // Transform the data to include email at the top level and ensure it's always present
-      const transformedData = (data as any[])
-        .filter((profile): profile is ProfileWithAuth => {
-          if (!profile.auth_user?.[0]?.email) {
+      // Transform the data to include email at the top level
+      const transformedData = (data as ProfileWithAuth[])
+        .filter(profile => {
+          if (!profile.auth_user?.email) {
             console.warn(`User ${profile.id} has no email address`);
             return false;
           }
@@ -42,10 +39,7 @@ export function useFetchUsers(notaryOfficeId: string | undefined) {
         })
         .map(profile => ({
           ...profile,
-          email: profile.auth_user[0].email,
-          auth_user: {
-            email: profile.auth_user[0].email
-          }
+          email: profile.auth_user.email
         }));
 
       console.log("Fetched users:", transformedData);
