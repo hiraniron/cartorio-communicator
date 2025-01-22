@@ -21,7 +21,7 @@ export const AdminDropdownMenu = ({ isActive }: AdminDropdownMenuProps) => {
           className="gap-2"
         >
           <Settings2 className="h-4 w-4" />
-          Administração
+          Configurações
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
