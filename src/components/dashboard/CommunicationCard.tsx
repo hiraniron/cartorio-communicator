@@ -55,25 +55,27 @@ export const CommunicationCard = ({
             Anexar
           </Button>
         </div>
-        <Button
-          variant="outline"
-          className="w-full hover-scale"
-          onClick={() => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.multiple = true;
-            fileInput.accept = '.pdf,.doc,.docx';
-            fileInput.onchange = (e) => {
-              if (e.target instanceof HTMLInputElement) {
-                onFileUpload({ target: e.target } as React.ChangeEvent<HTMLInputElement>);
-              }
-            };
-            fileInput.click();
-          }}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Adicionar mais arquivos
-        </Button>
+        <div className="flex items-center space-x-4">
+          <div className="flex-1" /> {/* Spacer to align with input above */}
+          <Button
+            className="hover-scale"
+            onClick={() => {
+              const fileInput = document.createElement('input');
+              fileInput.type = 'file';
+              fileInput.multiple = true;
+              fileInput.accept = '.pdf,.doc,.docx';
+              fileInput.onchange = (e) => {
+                if (e.target instanceof HTMLInputElement) {
+                  onFileUpload({ target: e.target } as React.ChangeEvent<HTMLInputElement>);
+                }
+              };
+              fileInput.click();
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Adicionar mais arquivos
+          </Button>
+        </div>
       </div>
     </Card>
   );
