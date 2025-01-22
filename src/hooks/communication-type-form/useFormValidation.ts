@@ -1,10 +1,12 @@
+import { toast } from "sonner";
+
 interface FormValidationData {
   name: string;
   description: string;
   whatToInform: string;
   deadlines: string[];
   selectedMonths: Date[];
-  requiresPdf?: boolean;
+  requiresPdf: boolean;
   pdfTemplate?: string;
 }
 
