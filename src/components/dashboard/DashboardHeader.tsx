@@ -16,7 +16,7 @@ export const DashboardHeader = ({ month, year }: DashboardHeaderProps) => {
   return (
     <header className="space-y-2">
       <h1 className="text-4xl font-display font-bold text-center">
-        Comunicações por {monthName} de {year}
+        Comunicações {monthName} de {year}
       </h1>
       <p className="text-gray-500 text-center">Gerencie suas comunicações legais</p>
     </header>
