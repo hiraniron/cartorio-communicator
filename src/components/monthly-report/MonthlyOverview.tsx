@@ -65,9 +65,12 @@ export const MonthlyOverview = ({
           <Button
             key={month}
             variant="outline"
-            className={`flex items-center justify-between p-4 ${
-              isSelected ? 'border-primary' : ''
-            } ${statusColor}`}
+            className={`
+              flex items-center justify-between p-4 
+              transition-all duration-200 ease-in-out
+              ${isSelected ? 'ring-2 ring-primary ring-offset-2 scale-[1.02] shadow-lg' : ''}
+              ${statusColor}
+            `}
             onClick={() => onMonthSelect(month)}
           >
             <div className="flex items-center gap-2">
