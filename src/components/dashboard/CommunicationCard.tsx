@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Paperclip, Plus } from "lucide-react";
+import { Paperclip } from "lucide-react";
 import type { CommunicationType } from "@/types/communication";
 
 interface CommunicationCardProps {
@@ -38,40 +38,20 @@ export const CommunicationCard = ({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center space-x-4">
-          <Input
-            type="file"
-            onChange={onFileUpload}
-            className="flex-1"
-            accept=".pdf,.doc,.docx"
-            multiple
-          />
-          <Button
-            onClick={() => onSubmit(comm.id)}
-            className="hover-scale"
-          >
-            <Paperclip className="w-4 h-4 mr-2" />
-            Anexar
-          </Button>
-        </div>
+      <div className="flex items-center space-x-4">
+        <Input
+          type="file"
+          onChange={onFileUpload}
+          className="flex-1"
+          accept=".pdf,.doc,.docx"
+          multiple
+        />
         <Button
-          className="w-full hover-scale"
-          onClick={() => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.multiple = true;
-            fileInput.accept = '.pdf,.doc,.docx';
-            fileInput.onchange = (e) => {
-              if (e.target instanceof HTMLInputElement) {
-                onFileUpload({ target: e.target } as React.ChangeEvent<HTMLInputElement>);
-              }
-            };
-            fileInput.click();
-          }}
+          onClick={() => onSubmit(comm.id)}
+          className="hover-scale"
         >
-          <Plus className="w-4 h-4 mr-2" />
-          Adicionar mais arquivos
+          <Paperclip className="w-4 h-4 mr-2" />
+          Anexar
         </Button>
       </div>
     </Card>
