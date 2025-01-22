@@ -14,7 +14,7 @@ export const Navigation = () => {
   const isActive = (path: string) => location.pathname === path;
   
   return (
-    <nav className="bg-white/50 backdrop-blur-sm border-b py-4 sticky top-0 z-50">
+    <nav className="bg-white border-b py-4 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 flex gap-2">
         <Link to="/">
           <Button 
@@ -52,7 +52,7 @@ export const Navigation = () => {
               Administração
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="bg-white">
             <Link to="/communication-types">
               <DropdownMenuItem>
                 <FileText className="h-4 w-4 mr-2" />
