@@ -6,7 +6,7 @@ import { UserRegistrationForm } from "@/components/notary-registration/UserRegis
 interface User {
   id: string;
   full_name: string;
-  role: string;
+  role: "admin" | "staff";
   email: string;
 }
 
@@ -45,7 +45,7 @@ export function UserManagementSheet({
           initialData={editingUser ? {
             email: editingUser.email,
             fullName: editingUser.full_name,
-            role: editingUser.role
+            role: editingUser.role as "admin" | "staff"
           } : undefined}
         />
       </SheetContent>

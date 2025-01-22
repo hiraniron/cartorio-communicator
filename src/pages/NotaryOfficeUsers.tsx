@@ -25,6 +25,11 @@ export default function NotaryOfficeUsers() {
     handleDeleteUser,
   } = useNotaryUsers(id);
 
+  const formattedUsers = users?.map(user => ({
+    ...user,
+    email: user.email || '', // Add email property
+  }));
+
   return (
     <div className="container mx-auto py-6">
       <Card className="p-6">
@@ -52,7 +57,7 @@ export default function NotaryOfficeUsers() {
           </TableHeader>
           <TableBody>
             <UsersList
-              users={users}
+              users={formattedUsers}
               isLoading={isLoading}
               onEdit={(user) => {
                 setEditingUser(user);
